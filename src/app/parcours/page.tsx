@@ -45,7 +45,7 @@ const experiences = [
   },
   {
     period: "Février 2025",
-    title: "Bootcamp BLO — Audify",
+    title: "BLO Bootcamp — Audify",
     detail:
       "Application web d'extraction de texte PDF et conversion en audio text-to-speech.",
     tags: ["JavaScript", "PDF.js"],
@@ -127,13 +127,17 @@ export default function ParcoursPage() {
         </Reveal>
         <Reveal delay={80}>
           <Heading variant="page" className="mt-4 max-w-[14ch]">
-            Du Bénin au full-stack.
+            De l&apos;Informatique Industrielle et Maintenance au dévellopement web full-stack et mobile.
           </Heading>
         </Reveal>
         <Reveal delay={160}>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-            Mon parcours combine formation académique, bootcamps pratiques et
-            projets réels en équipe pour renforcer mes compétences full-stack.
+            Forte de mes bases en informatique industrielle et maintenance, j&apos;ai décidé de me réorienter
+            vers le développement web full-stack et mobile pour mieux exprimer ma créativité et mon intérêt 
+            pour les technologies modernes. Mon parcours atypique m&apos;a permis d&apos;acquérir une solide
+            compréhension des systèmes informatiques tout en développant des compétences techniques pointues
+            en programmation, ce qui me permet d&apos;aborder les projets avec une perspective unique et 
+            une approche orientée solution.
           </p>
         </Reveal>
 

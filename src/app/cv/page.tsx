@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 const competences = [
-  { group: "Front-end", items: ["React", "Next.js", "Vue.js", "Tailwind CSS"] },
+  { group: "Front-end", items: ["React.js", "Next.js", "Vue.js", "Tailwind CSS"] },
   { group: "Back-end", items: ["Node.js", "Nest.js", "Laravel", "Flask"] },
   {
     group: "Langages",

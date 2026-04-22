@@ -8,3 +8,4 @@ export { Tag } from "./Tag";
 export { Link } from "./Link";
 export { Reveal } from "./Reveal";
 export { Marquee } from "./Marquee";
+export { ReadingProgress } from "./ReadingProgress";

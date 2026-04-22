@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import {
   ButtonLink,
@@ -9,6 +10,7 @@ import {
   SectionLabel,
   Tag,
 } from "@/components/ui";
+import { getProjectBySlug } from "@/lib/projects";
 
 const stack = [
   "React",
@@ -27,35 +29,23 @@ const stack = [
   "Git",
 ];
 
-const featured = [
-  {
-    number: "001",
-    title: "My Show Time",
-    year: "2025",
-    type: "Full-stack · Plateforme d'événements",
-    description:
-      "Plateforme de réservation de billets avec API RESTful, gestion des événements et des inscriptions.",
-    stack: ["Nest.js", "MongoDB", "Mongoose"],
-  },
-  {
-    number: "002",
-    title: "Yowl",
-    year: "2025",
-    type: "Full-stack · Avis clients",
-    description:
-      "Application full-stack permettant de publier des avis sur des produits e-commerce.",
-    stack: ["Vue.js", "Laravel", "Tailwind", "MySQL"],
-  },
-  {
-    number: "003",
-    title: "Calculatrice scientifique",
-    year: "2025",
-    type: "Desktop · Algorithmie",
-    description:
-      "Interface de calcul avec algorithme de Shunting Yard et évaluation en notation polonaise inversée.",
-    stack: ["Python", "Flask", "Tkinter"],
-  },
-];
+const FEATURED_SLUGS = ["my-show-time", "yowl", "calculatrice-scientifique"];
+
+const featured = FEATURED_SLUGS.map((slug, i) => {
+  const project = getProjectBySlug(slug);
+  if (!project) {
+    throw new Error(`Featured project slug "${slug}" not found in projects.ts`);
+  }
+  return {
+    number: String(i + 1).padStart(3, "0"),
+    slug: project.slug,
+    title: project.title,
+    year: project.year,
+    type: project.type,
+    description: project.summary,
+    stack: project.stack.slice(0, 4),
+  };
+});
 
 const pillars = [
   {
@@ -95,14 +85,13 @@ export default function HomePage() {
             className="block [animation:hero-line-in_900ms_var(--ease-out-soft)_both]"
             style={{ animationDelay: "320ms" }}
           >
-            basée au Bénin.
+            vivant au Bénin.
           </span>
         </h1>
 
         <Reveal delay={520}>
           <p className="mt-10 max-w-xl text-lg leading-relaxed text-muted">
-            J&apos;accompagne la conception et la mise en œuvre de produits
-            numériques utiles — du prototypage jusqu&apos;au déploiement.
+            De l’idée au déploiement, je conçois et développe des produits numériques fluides et prêts à la mise sur le marché.
           </p>
         </Reveal>
 
@@ -146,8 +135,8 @@ export default function HomePage() {
           {featured.map((p, i) => (
             <Reveal key={p.number} delay={i * 80}>
               <li>
-                <a
-                  href="#"
+                <Link
+                  href={`/projets/${p.slug}`}
                   className="group grid grid-cols-1 gap-4 py-10 lg:grid-cols-[80px_1fr_auto] lg:items-baseline lg:gap-10"
                 >
                   <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
@@ -168,10 +157,13 @@ export default function HomePage() {
                     </div>
                   </div>
                   <span className="inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.2em] text-muted transition-colors duration-200 group-hover:text-foreground">
-                    Lire
-                    <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={1.75} />
+                    Voir les détails
+                    <ArrowUpRight
+                      className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                      strokeWidth={1.75}
+                    />
                   </span>
-                </a>
+                </Link>
               </li>
             </Reveal>
           ))}
@@ -237,7 +229,8 @@ export default function HomePage() {
                 href="#"
                 className="font-display text-[clamp(1.25rem,2.5vw,1.75rem)] leading-tight tracking-tight transition-colors duration-200 group-hover:text-accent"
               >
-                hello@exemple.com
+                mensahsena03@gmail.com <br/>
+                premicia.mensah@epitech.eu
               </a>
             </li>
             <li className="group flex flex-wrap items-baseline justify-between gap-4 py-6">
