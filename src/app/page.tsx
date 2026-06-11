@@ -3,14 +3,17 @@ import { ArrowUpRight } from "lucide-react";
 import {
   ButtonLink,
   Heading,
+  Magnetic,
   Marquee,
   Page,
   Reveal,
   Section,
   SectionLabel,
+  Stats,
   Tag,
 } from "@/components/ui";
-import { getProjectBySlug } from "@/lib/projects";
+import type { Stat } from "@/components/ui";
+import { getAllProjects, getProjectBySlug } from "@/lib/projects";
 
 const stack = [
   "React",
@@ -27,6 +30,13 @@ const stack = [
   "PostgreSQL",
   "MySQL",
   "Git",
+];
+
+const stats: Stat[] = [
+  { value: getAllProjects().length, pad: true, label: "Projets" },
+  { value: stack.length, pad: true, label: "Technologies" },
+  { value: 2, pad: true, label: "Stages en entreprise" },
+  { text: "2024", label: "Développeuse depuis" },
 ];
 
 const FEATURED_SLUGS = ["my-show-time", "yowl", "calculatrice-scientifique"];
@@ -97,13 +107,17 @@ export default function HomePage() {
 
         <Reveal delay={620}>
           <div className="mt-10 flex flex-wrap gap-3">
-            <ButtonLink href="/projets" size="lg">
-              Voir les projets
-              <ArrowUpRight className="h-4 w-4" strokeWidth={1.75} />
-            </ButtonLink>
-            <ButtonLink href="#contact" variant="ghost" size="lg">
-              Me contacter
-            </ButtonLink>
+            <Magnetic>
+              <ButtonLink href="/projets" size="lg">
+                Voir les projets
+                <ArrowUpRight className="h-4 w-4" strokeWidth={1.75} />
+              </ButtonLink>
+            </Magnetic>
+            <Magnetic>
+              <ButtonLink href="#contact" variant="ghost" size="lg">
+                Me contacter
+              </ButtonLink>
+            </Magnetic>
           </div>
         </Reveal>
       </Section>
@@ -120,6 +134,12 @@ export default function HomePage() {
           ))}
         </Marquee>
       </div>
+
+      <Section size="md">
+        <Reveal>
+          <Stats items={stats} />
+        </Reveal>
+      </Section>
 
       <Section size="lg">
         <Reveal>

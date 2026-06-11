@@ -1,3 +1,4 @@
+import { createElement } from "react";
 import type { ElementType, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
@@ -32,6 +33,10 @@ export function Heading({
   children,
   className,
 }: Props) {
-  const Tag = as ?? defaultTag(variant);
-  return <Tag className={cn(variants[variant], className)}>{children}</Tag>;
+  const tag = as ?? defaultTag(variant);
+  return createElement(
+    tag,
+    { className: cn(variants[variant], className) },
+    children,
+  );
 }

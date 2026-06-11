@@ -9,3 +9,7 @@ export { Link } from "./Link";
 export { Reveal } from "./Reveal";
 export { Marquee } from "./Marquee";
 export { ReadingProgress } from "./ReadingProgress";
+export { Magnetic } from "./Magnetic";
+export { Stats } from "./Stats";
+export type { Stat } from "./Stats";
+export { PageTransition } from "./PageTransition";

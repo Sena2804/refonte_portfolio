@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Moon, Sun, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { useTheme } from "./ThemeProvider";
 import { cn } from "@/lib/cn";
 
@@ -14,18 +14,26 @@ const navLinks = [
   { href: "/cv", label: "CV" },
 ];
 
+// "monté côté client" sans effet ni setState : false au SSR, true sur le client.
+const noopSubscribe = () => () => {};
+
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(noopSubscribe, () => true, () => false);
 
   const isDark = mounted && resolvedTheme === "dark";
+
+  const handleToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const root = document.documentElement;
+    root.style.setProperty("--theme-x", `${event.clientX}px`);
+    root.style.setProperty("--theme-y", `${event.clientY}px`);
+    setTheme(isDark ? "light" : "dark");
+  };
 
   return (
     <button
       type="button"
-      onClick={() => setTheme(isDark ? "light" : "dark")}
+      onClick={handleToggle}
       aria-label={isDark ? "Passer en thème clair" : "Passer en thème sombre"}
       className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors duration-200 hover:border-foreground hover:bg-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
@@ -45,10 +53,6 @@ function ThemeToggle() {
 export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/75 backdrop-blur-xl">
@@ -126,6 +130,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  onClick={() => setOpen(false)}
                   aria-current={active ? "page" : undefined}
                   className={cn(
                     "border-b border-border py-4 font-display text-2xl leading-tight last:border-b-0",

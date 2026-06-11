@@ -57,11 +57,28 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 
   const setTheme = React.useCallback((nextTheme: Theme) => {
-    applyTheme(nextTheme);
-    try {
-      window.localStorage.setItem(STORAGE_KEY, nextTheme);
-    } catch {}
-    window.dispatchEvent(new Event(THEME_EVENT));
+    const persist = () => {
+      applyTheme(nextTheme);
+      try {
+        window.localStorage.setItem(STORAGE_KEY, nextTheme);
+      } catch {}
+      window.dispatchEvent(new Event(THEME_EVENT));
+    };
+
+    const reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const startViewTransition = (
+      document as Document & {
+        startViewTransition?: (cb: () => void) => unknown;
+      }
+    ).startViewTransition;
+
+    if (reduce || typeof startViewTransition !== "function") {
+      persist();
+      return;
+    }
+    startViewTransition.call(document, persist);
   }, []);
 
   const value = React.useMemo<ThemeContextValue>(
