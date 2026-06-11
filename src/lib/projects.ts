@@ -29,6 +29,8 @@ export type Project = {
   outcomes: string[];
   links: ProjectLink[];
   accent?: "default" | "warm";
+  /** Visuel de couverture (capture). Si absent, un cover génératif est utilisé. */
+  cover?: string;
 };
 
 export const projects: Project[] = [

@@ -78,7 +78,7 @@ export default function AProposPage() {
                   alt="Portrait de Prémicia MENSAH"
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"
-                  className="object-cover"
+                  className="parallax-slow object-cover"
                   priority
                 />
               </div>

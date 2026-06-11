@@ -13,3 +13,8 @@ export { Magnetic } from "./Magnetic";
 export { Stats } from "./Stats";
 export type { Stat } from "./Stats";
 export { PageTransition } from "./PageTransition";
+export { Aurora } from "./Aurora";
+export { AvailabilityCalendar } from "./AvailabilityCalendar";
+export { ProjectCover } from "./ProjectCover";
+export type { CoverData } from "./ProjectCover";
+export { HoverPreview } from "./HoverPreview";

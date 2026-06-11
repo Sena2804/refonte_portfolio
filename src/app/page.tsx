@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import {
+  Aurora,
+  AvailabilityCalendar,
   ButtonLink,
   Heading,
-  Magnetic,
+  HoverPreview,
   Marquee,
   Page,
   Reveal,
@@ -75,52 +77,59 @@ const pillars = [
 export default function HomePage() {
   return (
     <Page>
-      <Section size="lg">
-        <SectionLabel number="001">Portfolio 2026</SectionLabel>
+      <div className="relative isolate overflow-hidden">
+        <Aurora />
+        <Section size="lg">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.6fr_0.9fr]">
+            <div>
+              <SectionLabel number="001">Portfolio 2026</SectionLabel>
 
-        <h1 className="mt-10 max-w-[16ch] font-display font-normal text-[clamp(2.75rem,9vw,7.5rem)] leading-[0.95] tracking-[-0.02em]">
-          <span
-            className="block [animation:hero-line-in_900ms_var(--ease-out-soft)_both]"
-            style={{ animationDelay: "80ms" }}
-          >
-            Développeuse
-          </span>
-          <span
-            className="block text-muted [animation:hero-line-in_900ms_var(--ease-out-soft)_both]"
-            style={{ animationDelay: "200ms" }}
-          >
-            full-stack,
-          </span>
-          <span
-            className="block [animation:hero-line-in_900ms_var(--ease-out-soft)_both]"
-            style={{ animationDelay: "320ms" }}
-          >
-            vivant au Bénin.
-          </span>
-        </h1>
+              <h1 className="hero-title mt-10 max-w-[16ch] font-display font-normal text-[clamp(2.75rem,9vw,7.5rem)] leading-[0.95] tracking-[-0.02em]">
+                <span
+                  className="block [animation:hero-line-in_900ms_var(--ease-out-soft)_both]"
+                  style={{ animationDelay: "320ms" }}
+                >
+                  Prémicia MENSAH
+                </span>
+                <span
+                  className="block [animation:hero-line-in_900ms_var(--ease-out-soft)_both]"
+                  style={{ animationDelay: "80ms" }}
+                >
+                  Développeuse
+                </span>
+                <span
+                  className="block text-muted [animation:hero-line-in_900ms_var(--ease-out-soft)_both]"
+                  style={{ animationDelay: "200ms" }}
+                >
+                  full-stack
+                </span>
+              </h1>
 
-        <Reveal delay={520}>
-          <p className="mt-10 max-w-xl text-lg leading-relaxed text-muted">
-            De l’idée au déploiement, je conçois et développe des produits numériques fluides et prêts à la mise sur le marché.
-          </p>
-        </Reveal>
+              <Reveal delay={520}>
+                <p className="mt-10 max-w-xl text-lg leading-relaxed text-muted">
+                  De l’idée au déploiement, je conçois et développe des produits numériques fluides et prêts à la mise sur le marché.
+                </p>
+              </Reveal>
 
-        <Reveal delay={620}>
-          <div className="mt-10 flex flex-wrap gap-3">
-            <Magnetic>
-              <ButtonLink href="/projets" size="lg">
-                Voir les projets
-                <ArrowUpRight className="h-4 w-4" strokeWidth={1.75} />
-              </ButtonLink>
-            </Magnetic>
-            <Magnetic>
-              <ButtonLink href="#contact" variant="ghost" size="lg">
-                Me contacter
-              </ButtonLink>
-            </Magnetic>
+              <Reveal delay={620}>
+                <div className="mt-10 flex flex-wrap gap-3">
+                  <ButtonLink href="/projets" size="lg">
+                    Voir les projets
+                    <ArrowUpRight className="h-4 w-4" strokeWidth={1.75} />
+                  </ButtonLink>
+                  <ButtonLink href="#contact" variant="ghost" size="lg">
+                    Me contacter
+                  </ButtonLink>
+                </div>
+              </Reveal>
+            </div>
+
+            <Reveal delay={400} className="flex justify-center lg:justify-end">
+              <AvailabilityCalendar />
+            </Reveal>
           </div>
-        </Reveal>
-      </Section>
+        </Section>
+      </div>
 
       <div className="border-y border-border py-6">
         <Marquee speed={60}>
@@ -146,7 +155,7 @@ export default function HomePage() {
           <SectionLabel number="002">Sélection</SectionLabel>
         </Reveal>
         <Reveal delay={80}>
-          <Heading as="h2" variant="page" className="mt-4 max-w-[14ch]">
+          <Heading as="h2" variant="page" className="title-morph mt-4 max-w-[14ch]">
             Trois projets en détail.
           </Heading>
         </Reveal>
@@ -183,6 +192,7 @@ export default function HomePage() {
                       strokeWidth={1.75}
                     />
                   </span>
+                  <HoverPreview project={p} />
                 </Link>
               </li>
             </Reveal>
@@ -202,7 +212,7 @@ export default function HomePage() {
           <SectionLabel number="003">Approche</SectionLabel>
         </Reveal>
         <Reveal delay={80}>
-          <Heading as="h2" variant="page" className="mt-4 max-w-[18ch]">
+          <Heading as="h2" variant="page" className="title-morph mt-4 max-w-[18ch]">
             Trois principes, une seule ligne.
           </Heading>
         </Reveal>
@@ -228,7 +238,7 @@ export default function HomePage() {
           <SectionLabel number="004">Contact</SectionLabel>
         </Reveal>
         <Reveal delay={80}>
-          <h2 className="mt-4 max-w-[14ch] font-display font-normal text-[clamp(2.5rem,7vw,5rem)] leading-[0.98] tracking-[-0.02em]">
+          <h2 className="title-morph mt-4 max-w-[14ch] font-display font-normal text-[clamp(2.5rem,7vw,5rem)] leading-[0.98] tracking-[-0.02em]">
             Travaillons ensemble.
           </h2>
         </Reveal>
