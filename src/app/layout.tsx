@@ -5,6 +5,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ThemeProvider, ThemeScript } from "@/components/ThemeProvider";
 import { PageTransition } from "@/components/ui";
+import { AskMe } from "@/components/ai/AskMe";
+
+const chatEnabled = process.env.NEXT_PUBLIC_CHAT_ENABLED === "true";
 
 const sans = Geist({
   subsets: ["latin"],
@@ -72,6 +75,7 @@ export default function RootLayout({
           <Navbar />
           <PageTransition>{children}</PageTransition>
           <Footer />
+          {chatEnabled ? <AskMe /> : null}
         </ThemeProvider>
       </body>
     </html>

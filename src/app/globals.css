@@ -90,17 +90,6 @@ body {
   }
 }
 
-@keyframes count-pop {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 12px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
 /* Révélation circulaire du thème — API View Transitions native du navigateur.
    Activée uniquement hors reduced-motion ; sinon le bascule est instantané (géré en JS). */
 @media (prefers-reduced-motion: no-preference) {
@@ -230,27 +219,11 @@ body {
   }
 }
 
-@keyframes parallax-rise {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 36px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .parallax-slow {
       animation: parallax-slow linear both;
       animation-timeline: view();
-    }
-    .parallax-rise {
-      animation: parallax-rise linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 30%;
     }
   }
 }
@@ -294,22 +267,6 @@ body {
 .btn:hover .btn-fill,
 .btn:focus-visible .btn-fill {
   transform: scaleY(1);
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes nudge {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(3px);
-  }
 }
 
 /* ---- Aperçu projet qui suit le curseur ---- */

@@ -24,10 +24,7 @@ function ThemeToggle() {
   const isDark = mounted && resolvedTheme === "dark";
 
   const handleToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const root = document.documentElement;
-    root.style.setProperty("--theme-x", `${event.clientX}px`);
-    root.style.setProperty("--theme-y", `${event.clientY}px`);
-    setTheme(isDark ? "light" : "dark");
+    setTheme(isDark ? "light" : "dark", { x: event.clientX, y: event.clientY });
   };
 
   return (

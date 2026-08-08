@@ -84,7 +84,7 @@ export default function HomePage() {
             <div>
               <SectionLabel number="001">Portfolio 2026</SectionLabel>
 
-              <h1 className="hero-title mt-10 max-w-[16ch] font-display font-normal text-[clamp(2.75rem,9vw,7.5rem)] leading-[0.95] tracking-[-0.02em]">
+              <h1 className="hero-title mt-10 max-w-[16ch] font-display font-normal text-[clamp(2rem,6vw,5rem)] leading-[0.95] tracking-[-0.02em]">
                 <span
                   className="block [animation:hero-line-in_900ms_var(--ease-out-soft)_both]"
                   style={{ animationDelay: "320ms" }}

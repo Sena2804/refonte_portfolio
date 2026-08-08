@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { hasFinePointer, prefersReducedMotion } from "@/lib/media";
 
 /**
  * Décor de hero : nappes de couleur animées (aurora) + spotlight qui suit le
@@ -13,8 +14,8 @@ export function Aurora() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!hasFinePointer()) return;
+    if (prefersReducedMotion()) return;
 
     let raf = 0;
     const onMove = (event: PointerEvent) => {

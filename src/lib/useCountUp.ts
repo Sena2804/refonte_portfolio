@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { prefersReducedMotion } from "@/lib/media";
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 
@@ -18,8 +19,7 @@ export function useCountUp(target: number, duration = 1500) {
 
     // Reduced-motion ou pas d'IntersectionObserver : on affiche directement la
     // valeur finale, au frame suivant (setState hors du corps de l'effet).
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced || typeof IntersectionObserver === "undefined") {
+    if (prefersReducedMotion() || typeof IntersectionObserver === "undefined") {
       const id = requestAnimationFrame(() => setValue(target));
       return () => cancelAnimationFrame(id);
     }

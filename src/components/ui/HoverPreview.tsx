@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { hasFinePointer } from "@/lib/media";
 import { ProjectCover, type CoverData } from "./ProjectCover";
 
 /**
@@ -16,7 +17,7 @@ export function HoverPreview({ project }: { project: CoverData }) {
   useEffect(() => {
     const row = anchorRef.current?.parentElement;
     if (!row) return;
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    if (!hasFinePointer()) return;
 
     let raf = 0;
     const onMove = (event: PointerEvent) => {
