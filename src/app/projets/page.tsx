@@ -3,6 +3,7 @@ import NextLink from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import {
   Heading,
+  HoverPreview,
   Page,
   Reveal,
   Section,
@@ -91,6 +92,7 @@ export default function ProjetsPage() {
                       strokeWidth={1.75}
                     />
                   </span>
+                  <HoverPreview project={p} />
                 </NextLink>
               </li>
             </Reveal>

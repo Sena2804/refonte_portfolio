@@ -18,16 +18,13 @@ export function Reveal({ children, delay = 0, y = 16, className }: Props) {
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      setVisible(true);
-      return;
-    }
+    // Sans IntersectionObserver, on révèle au prochain frame (setState hors du
+    // corps synchrone de l'effet). En reduced-motion, le bloc dédié de
+    // globals.css neutralise transition durée + délai : l'apparition est
+    // instantanée dès que l'observer déclenche.
     if (typeof IntersectionObserver === "undefined") {
-      setVisible(true);
-      return;
+      const id = requestAnimationFrame(() => setVisible(true));
+      return () => cancelAnimationFrame(id);
     }
     const io = new IntersectionObserver(
       (entries) => {

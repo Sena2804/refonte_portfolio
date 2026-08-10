@@ -2,13 +2,17 @@
 
 import * as React from "react";
 import { useSyncExternalStore } from "react";
+import { prefersReducedMotion } from "@/lib/media";
 
 type Theme = "light" | "dark";
+
+/** Origine (px, repère viewport) de la révélation circulaire du thème. */
+type RevealOrigin = { x: number; y: number };
 
 type ThemeContextValue = {
   theme: Theme;
   resolvedTheme: Theme;
-  setTheme: (theme: Theme) => void;
+  setTheme: (theme: Theme, origin?: RevealOrigin) => void;
 };
 
 const ThemeContext = React.createContext<ThemeContextValue | null>(null);
@@ -56,13 +60,37 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     () => "light",
   );
 
-  const setTheme = React.useCallback((nextTheme: Theme) => {
-    applyTheme(nextTheme);
-    try {
-      window.localStorage.setItem(STORAGE_KEY, nextTheme);
-    } catch {}
-    window.dispatchEvent(new Event(THEME_EVENT));
-  }, []);
+  const setTheme = React.useCallback(
+    (nextTheme: Theme, origin?: RevealOrigin) => {
+      const persist = () => {
+        applyTheme(nextTheme);
+        try {
+          window.localStorage.setItem(STORAGE_KEY, nextTheme);
+        } catch {}
+        window.dispatchEvent(new Event(THEME_EVENT));
+      };
+
+      const startViewTransition = (
+        document as Document & {
+          startViewTransition?: (cb: () => void) => unknown;
+        }
+      ).startViewTransition;
+
+      if (prefersReducedMotion() || typeof startViewTransition !== "function") {
+        persist();
+        return;
+      }
+
+      // Origine de la révélation circulaire (lue par globals.css).
+      if (origin) {
+        const root = document.documentElement;
+        root.style.setProperty("--theme-x", `${origin.x}px`);
+        root.style.setProperty("--theme-y", `${origin.y}px`);
+      }
+      startViewTransition.call(document, persist);
+    },
+    [],
+  );
 
   const value = React.useMemo<ThemeContextValue>(
     () => ({ theme: resolvedTheme, resolvedTheme, setTheme }),

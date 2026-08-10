@@ -10,6 +10,7 @@
   --border: #E4E2DB;
   --accent: #1E2A4A;
   --accent-soft: #E8EAF1;
+  --ok: #1F9D63;
 }
 
 .dark {
@@ -20,6 +21,7 @@
   --border: #1F2436;
   --accent: #A9B6D9;
   --accent-soft: #1A2140;
+  --ok: #4ED99A;
 }
 
 @theme inline {
@@ -30,6 +32,7 @@
   --color-border: var(--border);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
+  --color-ok: var(--ok);
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-display: var(--font-fraunces), Georgia, serif;
@@ -76,6 +79,227 @@ body {
   }
 }
 
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Révélation circulaire du thème — API View Transitions native du navigateur.
+   Activée uniquement hors reduced-motion ; sinon le bascule est instantané (géré en JS). */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+  ::view-transition-old(root) {
+    z-index: 1;
+  }
+  ::view-transition-new(root) {
+    z-index: 9999;
+    animation: theme-reveal 520ms var(--ease-out-soft);
+  }
+}
+
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0% at var(--theme-x, 50%) var(--theme-y, 50%));
+  }
+  to {
+    clip-path: circle(145% at var(--theme-x, 50%) var(--theme-y, 50%));
+  }
+}
+
+/* ---- Hero vivant : aurora + spotlight + grain ---- */
+
+.aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.aurora::before,
+.aurora::after {
+  content: "";
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(72px);
+  will-change: transform;
+}
+
+.aurora::before {
+  width: 48vw;
+  height: 48vw;
+  left: -8%;
+  top: -22%;
+  opacity: 0.35;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--accent) 45%, transparent),
+    transparent 70%
+  );
+  animation: aurora-drift 26s var(--ease-out-soft) infinite;
+}
+
+.aurora::after {
+  width: 42vw;
+  height: 42vw;
+  right: -6%;
+  top: -12%;
+  opacity: 0.4;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--accent-soft) 85%, transparent),
+    transparent 70%
+  );
+  animation: aurora-drift 32s var(--ease-out-soft) infinite reverse;
+}
+
+.dark .aurora::before {
+  opacity: 0.5;
+}
+
+.dark .aurora::after {
+  opacity: 0.45;
+}
+
+@keyframes aurora-drift {
+  0% {
+    transform: translate3d(-6%, -4%, 0) scale(1.05);
+  }
+  50% {
+    transform: translate3d(8%, 6%, 0) scale(1.22);
+  }
+  100% {
+    transform: translate3d(-6%, -4%, 0) scale(1.05);
+  }
+}
+
+.spotlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--spot-o, 0);
+  transition: opacity 450ms var(--ease-out-soft);
+  background: radial-gradient(
+    300px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    color-mix(in oklab, var(--accent) 22%, transparent),
+    transparent 60%
+  );
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 120px 120px;
+}
+
+.dark .grain {
+  opacity: 0.06;
+}
+
+/* ---- Parallax natif piloté par le scroll (zéro JS) ---- */
+
+@keyframes parallax-slow {
+  from {
+    transform: translate3d(0, -6%, 0) scale(1.14);
+  }
+  to {
+    transform: translate3d(0, 6%, 0) scale(1.14);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .parallax-slow {
+      animation: parallax-slow linear both;
+      animation-timeline: view();
+    }
+  }
+}
+
+/* ---- Titres en police variable (Fraunces) : adoucissement au survol ---- */
+
+.title-morph {
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
+  transition: font-variation-settings 450ms var(--ease-out-soft);
+}
+
+.title-morph:hover {
+  font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+}
+
+/* Titre du hero : on coupe les feature-settings hérités du corps (ss01/cv11,
+   pensés pour Geist) qui dégradaient le dessin des lettres en Fraunces, et on
+   choisit un axe optique plus lisible avec des terminaisons adoucies. */
+.hero-title {
+  font-feature-settings: normal;
+  font-variation-settings: "opsz" 78, "SOFT" 40, "WONK" 0;
+}
+
+/* ---- Boutons : remplissage au survol (« étape accomplie ») ---- */
+
+.btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.btn-fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 380ms var(--ease-out-soft);
+}
+
+.btn:hover .btn-fill,
+.btn:focus-visible .btn-fill {
+  transform: scaleY(1);
+}
+
+/* ---- Aperçu projet qui suit le curseur ---- */
+
+@keyframes preview-in {
+  from {
+    opacity: 0;
+    transform: translate(24px, -50%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(24px, -50%) scale(1);
+  }
+}
+
+/* ---- Pastille de disponibilité : halo lent quand le statut est ouvert ---- */
+
+.status-pulse {
+  animation: status-pulse 2.8s var(--ease-out-soft) infinite;
+}
+
+@keyframes status-pulse {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -84,5 +308,6 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
   }
 }

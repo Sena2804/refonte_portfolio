@@ -4,6 +4,14 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ThemeProvider, ThemeScript } from "@/components/ThemeProvider";
+import { PageTransition } from "@/components/ui";
+import { AskMe } from "@/components/ai/AskMe";
+import { getChatConfig } from "@/lib/chat/providers";
+
+// Le widget suit la config réelle du fournisseur : pas de second interrupteur à
+// tenir à la main. Une clé présente => le chat s'affiche ; pas de clé => rien,
+// et jamais une bulle visible qui répondrait 503 au premier message.
+const chatEnabled = getChatConfig() !== null;
 
 const sans = Geist({
   subsets: ["latin"],
@@ -21,6 +29,7 @@ const display = Fraunces({
   subsets: ["latin"],
   variable: "--font-fraunces",
   display: "swap",
+  axes: ["opsz", "SOFT", "WONK"],
 });
 
 export const metadata: Metadata = {
@@ -68,8 +77,9 @@ export default function RootLayout({
             Aller au contenu
           </a>
           <Navbar />
-          {children}
+          <PageTransition>{children}</PageTransition>
           <Footer />
+          {chatEnabled ? <AskMe /> : null}
         </ThemeProvider>
       </body>
     </html>
