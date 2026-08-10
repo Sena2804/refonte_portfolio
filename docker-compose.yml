@@ -1,0 +1,36 @@
+# Lancement local de l'image de production.
+#
+#   docker compose up --build     construit puis démarre
+#   docker compose up -d          démarre en arrière-plan
+#   docker compose logs -f        suit les logs
+#   docker compose down           arrête et supprime le conteneur
+#
+# Le portfolio répond ensuite sur http://localhost:3001
+
+services:
+  # "web" est un nom libre : c'est ainsi qu'on désignera ce conteneur dans les
+  # commandes (`docker compose logs web`).
+  web:
+    # Construire l'image depuis le Dockerfile du dossier courant, plutôt que
+    # d'aller chercher une image toute faite sur un registre.
+    build: .
+
+    # Nom fixe du conteneur, pour que `docker logs portfolio` marche sans avoir
+    # à retrouver son identifiant.
+    container_name: portfolio
+
+    ports:
+      # "hôte:conteneur". On publie le 3001 de la machine car le 3000 y est déjà
+      # pris par `next dev`. À l'intérieur, l'application écoute bien sur 3000.
+      - "3001:3000"
+
+    # Les secrets sont lus au démarrage, jamais inscrits dans l'image.
+    # `required: false` laisse la commande fonctionner même sans fichier .env :
+    # l'application démarre alors en mode dégradé (chat masqué, /admin en veille).
+    env_file:
+      - path: .env
+        required: false
+
+    # Redémarre le conteneur s'il plante ou après un reboot — mais pas après un
+    # `docker compose down` volontaire.
+    restart: unless-stopped
