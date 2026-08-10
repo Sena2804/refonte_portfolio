@@ -19,6 +19,7 @@ async function buildSystemPrompt(): Promise<string> {
     persona.voice,
     persona.scope,
     persona.honesty,
+    persona.levels,
     persona.privacy,
     "",
     buildKnowledgeBase(describeAvailability(availability)),

@@ -18,23 +18,12 @@ import type { Stat } from "@/components/ui";
 import { getAllProjects, getProjectBySlug } from "@/lib/projects";
 import { getAvailability } from "@/lib/availability";
 import { CONTACT } from "@/lib/site";
+import { skillsAt } from "@/lib/skills";
 
-const stack = [
-  "React",
-  "Next.js",
-  "Vue.js",
-  "Node.js",
-  "Nest.js",
-  "Laravel",
-  "Flask",
-  "Python",
-  "TypeScript",
-  "Tailwind CSS",
-  "MongoDB",
-  "PostgreSQL",
-  "MySQL",
-  "Git",
-];
+// Bandeau défilant : les technologies réellement pratiquées, entreprise et
+// projets confondus. Source unique — le mobile y manquait alors que deux
+// applications livrées l'utilisent.
+const stack = [...skillsAt("company"), ...skillsAt("project")].map((s) => s.name);
 
 const stats: Stat[] = [
   { value: getAllProjects().length, pad: true, label: "Projets" },

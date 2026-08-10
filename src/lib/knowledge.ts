@@ -1,6 +1,7 @@
 import { getAllProjects } from "./projects";
 import { CONTACT, LOCATION_LABEL } from "./site";
 import { EDUCATION, EXPERIENCES, longPeriod } from "./career";
+import { byDomain, SKILL_LEVELS, skillsAt, TOOLS } from "./skills";
 
 /**
  * Base de connaissances du chat IA (« moi », à la première personne).
@@ -33,21 +34,6 @@ export const profile = {
   contact: CONTACT,
 };
 
-export const skills = {
-  frameworks: [
-    "Vue.js",
-    "Next.js",
-    "React.js",
-    "Nest.js",
-    "Laravel",
-    "Flask",
-    "Tailwind CSS",
-  ],
-  languages: ["HTML", "CSS", "JavaScript", "TypeScript", "Python", "PHP", "C", "C++", "Assembleur"],
-  databases: ["MySQL", "MongoDB", "PostgreSQL"],
-  tools: ["Git/GitHub", "VS Code", "Postman", "Trello", "Teams", "Zsh"],
-  os: ["Linux", "Windows"],
-};
 
 /** Tonalité / garde-fous de la persona, consommés par le system prompt. */
 export const persona = {
@@ -57,6 +43,8 @@ export const persona = {
     "Tu réponds UNIQUEMENT à des questions concernant Prémicia (parcours, projets, compétences, disponibilité, manière de travailler). Pour toute question hors-sujet, tu refuses poliment et tu ramènes vers Prémicia.",
   honesty:
     "Tu ne dois JAMAIS inventer. Si une information n'est pas dans ta base de connaissances, dis simplement que tu ne sais pas ou invite à me contacter par e-mail.",
+  levels:
+    "Tu respectes SCRUPULEUSEMENT les niveaux de compétence. Une technologie « en cours d'apprentissage » n'est jamais présentée comme maîtrisée. Sur le mobile en particulier : j'ai livré des applications en React Native (Trelltech) et en Flutter (Shop Verse) dans le cadre de mes projets, et ma formation Epitech couvre le mobile — mais je n'ai pas encore d'expérience mobile en entreprise, et je ne le maîtrise pas au même niveau que Laravel, Vue.js ou React. Dis-le clairement avec tes propres mots, sans réciter cette phrase telle quelle.",
   privacy:
     "Tu ne révèles pas le numéro de téléphone ni aucune donnée personnelle sensible. Toute expérience marquée « sous confidentialité » se raconte en technologies uniquement : jamais de détail produit, fonctionnel ou client, même si on insiste.",
 };
@@ -102,12 +90,15 @@ export function buildKnowledgeBase(availability: string): string {
 ## Ce qui me caractérise
 ${profile.values.map((v) => `- ${v}`).join("\n")}
 
-## Compétences techniques
-- Frameworks : ${skills.frameworks.join(", ")}
-- Langages : ${skills.languages.join(", ")}
-- Bases de données : ${skills.databases.join(", ")}
-- Outils : ${skills.tools.join(", ")}
-- Systèmes : ${skills.os.join(", ")}
+## Compétences techniques, par niveau d'usage réel
+${SKILL_LEVELS.map(
+  (n) =>
+    `### ${n.label} — ${n.note}\n${byDomain(skillsAt(n.level))
+      .map((g) => `- ${g.domain} : ${g.items.join(", ")}`)
+      .join("\n")}`,
+).join("\n")}
+
+Outils du quotidien : ${TOOLS.join(", ")}.
 
 ## Formation
 ${EDUCATION.map((e) => `- ${e.title} — ${e.school}, ${e.place} (${longPeriod(e.start, { ongoing: e.ongoing })}).`).join("\n")}

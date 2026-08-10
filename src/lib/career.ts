@@ -58,16 +58,17 @@ export const EDUCATION: Education[] = [
   {
     school: "Coding Academy by Epitech",
     place: "Cotonou",
-    title: "Développement web full-stack",
+    title: "Développement web full-stack et mobile",
     start: "2025-07",
-    detail: "Formation en développement web full-stack.",
+    detail:
+      "Formation en développement web full-stack, incluant le développement mobile.",
   },
   {
     school: "École 229",
     place: "Cotonou",
-    title: "Développement web et mobile",
+    title: "Développement web",
     start: "2024-10",
-    detail: "Formation en développement web et mobile.",
+    detail: "Formation en développement web.",
   },
   {
     school: "HECM",

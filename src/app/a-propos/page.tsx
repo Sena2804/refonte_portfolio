@@ -7,6 +7,7 @@ import {
   Section,
   SectionLabel,
 } from "@/components/ui";
+import { skillsAt, TOOLS } from "@/lib/skills";
 
 export const metadata: Metadata = {
   title: "À propos",
@@ -14,27 +15,15 @@ export const metadata: Metadata = {
     "Prémicia MENSAH, développeuse full-stack béninoise. Parcours, valeurs et outils quotidiens.",
 };
 
-const tools = [
-  "VS Code",
-  "Linux",
-  "Git / GitHub",
-  "Postman",
-  "Figma",
-  "Notion",
-];
-
 const motivations = [
   "Produits utiles",
   "Équipes soudées",
   "Apprentissage continu",
 ];
 
-const learning = [
-  "Architecture logicielle",
-  "DevOps & CI/CD",
-  "Design produit",
-  "Machine Learning",
-];
+// Source unique : les mêmes listes alimentent /cv et la base du chat.
+const tools = TOOLS;
+const learning = skillsAt("learning").map((s) => s.name);
 
 function Pillar({
   heading,
