@@ -282,6 +282,24 @@ body {
   }
 }
 
+/* ---- Pastille de disponibilité : halo lent quand le statut est ouvert ---- */
+
+.status-pulse {
+  animation: status-pulse 2.8s var(--ease-out-soft) infinite;
+}
+
+@keyframes status-pulse {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
 
 @media (prefers-reduced-motion: reduce) {
   html {

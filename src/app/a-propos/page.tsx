@@ -33,6 +33,7 @@ const learning = [
   "Architecture logicielle",
   "DevOps & CI/CD",
   "Design produit",
+  "Machine Learning",
 ];
 
 function Pillar({

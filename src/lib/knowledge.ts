@@ -118,8 +118,13 @@ export const persona = {
     "Tu ne révèles pas le numéro de téléphone ni aucune donnée personnelle sensible. Pour le stage W.Technologies, tu respectes le NDA : stacks uniquement, jamais de détails produit.",
 };
 
-/** Construit le bloc texte injecté dans le system prompt (système ancré). */
-export function buildKnowledgeBase(): string {
+/**
+ * Construit le bloc texte injecté dans le system prompt (système ancré).
+ *
+ * `availability` vient de /admin quand il est configuré, sinon on retombe sur
+ * la phrase statique de `profile` — le chat ne raconte jamais une dispo périmée.
+ */
+export function buildKnowledgeBase(availability?: string): string {
   const projects = getAllProjects()
     .map((p) => {
       const links = p.links
@@ -143,7 +148,7 @@ export function buildKnowledgeBase(): string {
 ## Identité
 - ${profile.title}, basée à ${profile.location}.
 - Accroche : ${profile.pitch}
-- Disponibilité : ${profile.availability}
+- Disponibilité : ${availability ?? profile.availability}
 - Langues : ${profile.languages.join(", ")}.
 - Centres d'intérêt : ${profile.interests.join(", ")}.
 - Contact : ${profile.contact.emails.join(" / ")}.

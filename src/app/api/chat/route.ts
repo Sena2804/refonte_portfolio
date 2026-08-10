@@ -4,18 +4,25 @@ import {
   type ChatMessage,
 } from "@/lib/chat/providers";
 import { buildKnowledgeBase, persona } from "@/lib/knowledge";
+import { describeAvailability, getAvailability } from "@/lib/availability";
 
 export const runtime = "nodejs";
 
-// System prompt ancré, construit une fois (la base de connaissances est statique).
-const SYSTEM_PROMPT = [
-  persona.voice,
-  persona.scope,
-  persona.honesty,
-  persona.privacy,
-  "",
-  buildKnowledgeBase(),
-].join("\n");
+/**
+ * System prompt ancré. Tout est statique sauf la disponibilité, pilotée depuis
+ * /admin — la lecture est mise en cache par tag, donc le coût par requête est nul.
+ */
+async function buildSystemPrompt(): Promise<string> {
+  const availability = await getAvailability();
+  return [
+    persona.voice,
+    persona.scope,
+    persona.honesty,
+    persona.privacy,
+    "",
+    buildKnowledgeBase(describeAvailability(availability)),
+  ].join("\n");
+}
 
 // Rate-limit en mémoire, best-effort (par instance serverless).
 const WINDOW_MS = 10 * 60 * 1000;
@@ -84,11 +91,12 @@ export async function POST(req: Request) {
     return Response.json({ error: "bad_request" }, { status: 400 });
   }
 
+  const systemPrompt = await buildSystemPrompt();
   const encoder = new TextEncoder();
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
-        for await (const delta of streamChat(config, SYSTEM_PROMPT, messages)) {
+        for await (const delta of streamChat(config, systemPrompt, messages)) {
           controller.enqueue(encoder.encode(delta));
         }
       } catch {

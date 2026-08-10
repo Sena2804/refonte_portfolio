@@ -16,6 +16,7 @@ import {
 } from "@/components/ui";
 import type { Stat } from "@/components/ui";
 import { getAllProjects, getProjectBySlug } from "@/lib/projects";
+import { getAvailability } from "@/lib/availability";
 
 const stack = [
   "React",
@@ -74,7 +75,10 @@ const pillars = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Lecture étiquetée : la home reste prérendue, /admin invalide le tag.
+  const availability = await getAvailability();
+
   return (
     <Page>
       <div className="relative isolate overflow-hidden">
@@ -125,7 +129,7 @@ export default function HomePage() {
             </div>
 
             <Reveal delay={400} className="flex justify-center lg:justify-end">
-              <AvailabilityCalendar />
+              <AvailabilityCalendar availability={availability} />
             </Reveal>
           </div>
         </Section>
@@ -255,25 +259,32 @@ export default function HomePage() {
               <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
                 E-mail
               </span>
-              <a
-                href="#"
-                className="font-display text-[clamp(1.25rem,2.5vw,1.75rem)] leading-tight tracking-tight transition-colors duration-200 group-hover:text-accent"
-              >
-                mensahsena03@gmail.com <br/>
-                premicia.mensah@epitech.eu
-              </a>
+              <div className="flex flex-col gap-2">
+                <a
+                  href="mailto:mensahsena03@gmail.com"
+                  className="font-display text-indigo-700 text-[clamp(1.25rem,2.5vw,1.75rem)] leading-tight tracking-tight transition-colors duration-200 hover:underline hover:text-indigo-900"
+                >
+                  mensahsena03@gmail.com
+                </a>
+                <a
+                  href="mailto:premicia.mensah@epitech.eu"
+                  className="font-display text-indigo-700 text-[clamp(1.25rem,2.5vw,1.75rem)] leading-tight tracking-tight transition-colors duration-200 hover:underline hover:text-indigo-900"
+                >
+                  premicia.mensah@epitech.eu
+                </a>
+              </div>
             </li>
             <li className="group flex flex-wrap items-baseline justify-between gap-4 py-6">
               <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
                 LinkedIn
               </span>
               <a
-                href="#"
+                href="https://www.linkedin.com/in/pr%C3%A9micia-mensah/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-display text-[clamp(1.25rem,2.5vw,1.75rem)] leading-tight tracking-tight transition-colors duration-200 group-hover:text-accent"
+                className="font-display text-indigo-700 text-[clamp(1.25rem,2.5vw,1.75rem)] leading-tight tracking-tight transition-colors duration-200 hover:underline hover:text-indigo-900"
               >
-                linkedin.com/in/premicia-mensah
+                linkedin.com/in/pr%C3%A9micia-mensah/
               </a>
             </li>
             <li className="group flex flex-wrap items-baseline justify-between gap-4 py-6">
@@ -281,10 +292,10 @@ export default function HomePage() {
                 GitHub
               </span>
               <a
-                href="#"
+                href="https://github.com/Sena2804"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-display text-[clamp(1.25rem,2.5vw,1.75rem)] leading-tight tracking-tight transition-colors duration-200 group-hover:text-accent"
+                className="font-display text-indigo-700 text-[clamp(1.25rem,2.5vw,1.75rem)] leading-tight tracking-tight transition-colors duration-200 hover:underline hover:text-indigo-900"
               >
                 github.com/premicia
               </a>
