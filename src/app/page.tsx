@@ -270,9 +270,10 @@ export default async function HomePage() {
           </h2>
         </Reveal>
         <Reveal delay={160}>
+          {/* Même source que la pastille du hero : la page ne peut pas dire
+              « je suis disponible » pendant que le statut annonce l'inverse. */}
           <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted">
-            Je suis disponible pour des missions en full-stack, du prototypage
-            produit au déploiement.
+            {availability.message}
           </p>
         </Reveal>
 

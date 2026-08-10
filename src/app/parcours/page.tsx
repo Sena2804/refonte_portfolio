@@ -7,6 +7,7 @@ import {
   SectionLabel,
   Tag,
 } from "@/components/ui";
+import { EDUCATION, EXPERIENCES, longPeriod } from "@/lib/career";
 
 export const metadata: Metadata = {
   title: "Parcours",
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
     "Expériences, projets et formations de Prémicia MENSAH, développeuse full-stack.",
 };
 
-const experiences = [
+const projects: TimelineItem[] = [
   {
     period: "Novembre 2025",
     title: "My Show Time",
@@ -52,29 +53,20 @@ const experiences = [
   },
 ];
 
-const education = [
-  {
-    period: "Juillet 2025",
-    title: "Coding Academy Epitech",
-    detail: "Formation en développement web full-stack.",
-  },
-  {
-    period: "Octobre 2024",
-    title: "École 229",
-    detail: "Formation en développement web et mobile.",
-  },
-  {
-    period: "2024",
-    title: "HECM",
-    detail:
-      "Licence professionnelle en informatique industrielle et maintenance.",
-  },
-  {
-    period: "2020",
-    title: "Cours Secondaire Saint Augustin",
-    detail: "Baccalauréat série D.",
-  },
-];
+// Stages et formations viennent de la source unique `career.ts`, partagée avec
+// /cv et la base de connaissances du chat.
+const internships: TimelineItem[] = EXPERIENCES.map((x) => ({
+  period: longPeriod(x.start, { end: x.end }),
+  title: x.org,
+  detail: `${x.role} — ${x.summary}`,
+  tags: x.stack,
+}));
+
+const education: TimelineItem[] = EDUCATION.map((e) => ({
+  period: longPeriod(e.start, { ongoing: e.ongoing }),
+  title: e.school,
+  detail: e.detail,
+}));
 
 type TimelineItem = {
   period: string;
@@ -145,11 +137,26 @@ export default function ParcoursPage() {
           <div>
             <Reveal>
               <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
-                Expériences &amp; projets
+                Stages en entreprise
               </h2>
             </Reveal>
             <ol className="relative mt-10 border-l border-border">
-              {experiences.map((e, i) => (
+              {internships.map((e, i) => (
+                <TimelineEntry
+                  key={`${e.period}-${e.title}`}
+                  item={e}
+                  index={i}
+                />
+              ))}
+            </ol>
+
+            <Reveal>
+              <h2 className="mt-16 font-mono text-xs uppercase tracking-[0.2em] text-muted">
+                Projets
+              </h2>
+            </Reveal>
+            <ol className="relative mt-10 border-l border-border">
+              {projects.map((e, i) => (
                 <TimelineEntry
                   key={`${e.period}-${e.title}`}
                   item={e}

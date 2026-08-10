@@ -7,6 +7,21 @@
  * base dans le bundle navigateur.
  */
 
+/**
+ * Origine publique du site, sans slash final.
+ *
+ * Ordre de résolution : la variable explicite, puis le domaine de production
+ * fourni automatiquement par Vercel, puis le domaine visé. Sans ça, un
+ * déploiement sur *.vercel.app annoncerait des URLs canoniques inexistantes
+ * dans le sitemap, robots.txt et les balises Open Graph.
+ */
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "https://premicia.dev")
+).replace(/\/$/, "");
+
 export const SITE_LOCATION = {
   city: "Cotonou",
   country: "Bénin",

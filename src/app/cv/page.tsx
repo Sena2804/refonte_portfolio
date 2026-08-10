@@ -9,6 +9,7 @@ import {
   SectionLabel,
   Tag,
 } from "@/components/ui";
+import { EDUCATION, EXPERIENCES, shortPeriod } from "@/lib/career";
 
 export const metadata: Metadata = {
   title: "CV",
@@ -27,7 +28,22 @@ const competences = [
   { group: "Outils", items: ["Git", "GitHub", "Postman", "Trello", "Linux"] },
 ];
 
-const experiences = [
+// Stages et formations : source unique `career.ts`, partagée avec /parcours.
+const stages = EXPERIENCES.map((x) => ({
+  period: shortPeriod(x.start, x.end),
+  title: x.org,
+  detail: x.stack.length
+    ? `${x.role} — ${x.stack.join(", ")}.`
+    : `${x.role}.`,
+}));
+
+const formations = EDUCATION.map((e) => ({
+  period: shortPeriod(e.start),
+  title: e.school,
+  detail: e.detail,
+}));
+
+const projets = [
   {
     period: "11 / 2025",
     title: "My Show Time",
@@ -52,29 +68,6 @@ const experiences = [
     period: "02 / 2025",
     title: "Audify — Bootcamp BLO",
     detail: "Extraction PDF + text-to-speech.",
-  },
-];
-
-const formations = [
-  {
-    period: "07 / 2025",
-    title: "Coding Academy Epitech",
-    detail: "Formation full-stack.",
-  },
-  {
-    period: "10 / 2024",
-    title: "École 229",
-    detail: "Développement web et mobile.",
-  },
-  {
-    period: "2024",
-    title: "HECM",
-    detail: "Licence pro — Informatique industrielle et maintenance.",
-  },
-  {
-    period: "2020",
-    title: "Cours Secondaire Saint Augustin",
-    detail: "Baccalauréat série D.",
   },
 ];
 
@@ -177,10 +170,8 @@ export default function CVPage() {
 
           <Reveal delay={100}>
             <div className="space-y-16">
-              <HistoryBlock
-                heading="Expériences & projets"
-                entries={experiences}
-              />
+              <HistoryBlock heading="Stages en entreprise" entries={stages} />
+              <HistoryBlock heading="Projets" entries={projets} />
               <HistoryBlock heading="Formations" entries={formations} />
             </div>
           </Reveal>

@@ -7,6 +7,7 @@ import { ThemeProvider, ThemeScript } from "@/components/ThemeProvider";
 import { PageTransition } from "@/components/ui";
 import { AskMe } from "@/components/ai/AskMe";
 import { getChatConfig } from "@/lib/chat/providers";
+import { SITE_URL } from "@/lib/site";
 
 // Le widget suit la config réelle du fournisseur : pas de second interrupteur à
 // tenir à la main. Une clé présente => le chat s'affiche ; pas de clé => rien,
@@ -33,7 +34,7 @@ const display = Fraunces({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://premicia.dev"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Prémicia S. E. MENSAH — Développeuse Full-stack",
     template: "%s — Prémicia S. E. MENSAH",

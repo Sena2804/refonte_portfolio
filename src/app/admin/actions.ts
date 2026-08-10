@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies, headers } from "next/headers";
-import { updateTag } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import {
   ADMIN_COOKIE,
   SESSION_MAX_AGE,
@@ -111,9 +111,12 @@ export async function saveAvailability(
     return { error: "Le stockage n'a pas accepté l'écriture. Réessaie." };
   }
 
-  // Invalide la lecture étiquetée : le hero et le chat repartent sur la
-  // nouvelle valeur dès la prochaine visite (read-your-own-writes).
+  // Deux invalidations, deux caches distincts :
+  // - le tag purge la donnée mise en cache (lue aussi par /api/chat) ;
+  // - le chemin purge le HTML prérendu de l'accueil, que le tag seul ne
+  //   suffit pas à régénérer (vérifié : sans ça, le hero reste figé).
   updateTag(AVAILABILITY_TAG);
+  revalidatePath("/");
   return {
     success: persisted
       ? "Disponibilité mise à jour."
