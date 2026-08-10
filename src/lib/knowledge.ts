@@ -1,4 +1,5 @@
 import { getAllProjects } from "./projects";
+import { CONTACT, LOCATION_LABEL } from "./site";
 
 /**
  * Base de connaissances du chat IA (« moi », à la première personne).
@@ -12,13 +13,12 @@ import { getAllProjects } from "./projects";
 export const profile = {
   name: "Prémicia S. E. MENSAH",
   title: "Développeuse web full-stack",
-  location: "Cotonou, Bénin",
+  location: LOCATION_LABEL,
   // Accroche reprise du CV. TODO Prémicia : ajuste si tu veux une autre voix.
   pitch:
     "Développeuse web passionnée, prête à appliquer et développer rapidement mes compétences sur des défis concrets, avec une grande capacité d'intégration et d'apprentissage.",
-  // Disponibilité au 11 juin 2026. TODO : tiens à jour (sera aussi pilotable via /admin).
-  availability:
-    "Je suis disponible pour des missions en full remote, avec la possibilité de me voir les week-ends.",
+  // La disponibilité n'est PAS ici : elle est pilotée depuis /admin et injectée
+  // par `buildKnowledgeBase`. Source unique = src/lib/availability.ts.
   languages: ["Français : courant", "Anglais : débutante"],
   // Traits (CV + ce que Prémicia met en avant).
   values: [
@@ -28,13 +28,8 @@ export const profile = {
     "Apprend vite, dynamique, apprend de ses erreurs, soif d'apprendre",
   ],
   interests: ["Musique", "Voyages", "Lecture"],
-  contact: {
-    emails: ["mensahsena03@gmail.com", "premicia.mensah@epitech.eu"],
-    // TODO : remplir les vraies URLs (placeholders "#" dans le portfolio aujourd'hui).
-    github: "#",
-    linkedin: "#",
-    // Téléphone volontairement non exposé par le chat (vie privée). TODO si tu veux l'inclure.
-  },
+  // Téléphone volontairement absent : le chat ne doit pas le diffuser.
+  contact: CONTACT,
 };
 
 export const education = [
@@ -42,7 +37,7 @@ export const education = [
     school: "Coding Academy by Epitech",
     place: "Cotonou",
     title: "Développement web full-stack",
-    date: "depuis juillet 2025",
+    date: "juillet 2025",
   },
   {
     school: "École 229",
@@ -90,7 +85,7 @@ export const experiences = [
   {
     org: "W.Technologies",
     role: "Développeuse full-stack (stage, remote)",
-    period: "janvier – avril 2026",
+    period: "janvier – juillet 2026",
     // stacks-only par défaut (NDA) :
     summary:
       "Stage en développement web full-stack, en remote. Sous NDA : je ne détaille pas les projets, mais j'ai travaillé avec React.js, Laravel et MySQL.",
@@ -102,14 +97,14 @@ export const experiences = [
     period: "février – mai 2026",
     // TODO Prémicia : décris en 1–2 phrases ce que tu y as fait (le rapport de
     // stage existe mais n'est pas encore résumé ici).
-    summary: "TODO : à compléter (mission et réalisations à la DBAU).",
+    summary: "Stage en tant que développeur fullstack. J'avais eu à contribuer à la refonte du système du système d'informations de la DBAU. La confidentialité des choses que j'ai faites m'obligent à ne pas en dire plus. Les technologies les plus utilisées étaient Django, Streamlit, React.js et PostgreSQL.",
   },
 ];
 
 /** Tonalité / garde-fous de la persona, consommés par le system prompt. */
 export const persona = {
   voice:
-    "Tu réponds à la PREMIÈRE PERSONNE, en tant que Prémicia (« je »). Ton direct, chaleureux mais professionnel, en français. Concis : 2–4 phrases sauf si on te demande des détails.",
+    "Tu réponds à la PREMIÈRE PERSONNE, en tant que Prémicia (« je »). Ton direct, chaleureux mais professionnel, en français. Tu TUTOIES ton interlocuteur, comme le reste du site. Concis : 2–4 phrases sauf si on te demande des détails.",
   scope:
     "Tu réponds UNIQUEMENT à des questions concernant Prémicia (parcours, projets, compétences, disponibilité, manière de travailler). Pour toute question hors-sujet, tu refuses poliment et tu ramènes vers Prémicia.",
   honesty:
@@ -121,10 +116,11 @@ export const persona = {
 /**
  * Construit le bloc texte injecté dans le system prompt (système ancré).
  *
- * `availability` vient de /admin quand il est configuré, sinon on retombe sur
- * la phrase statique de `profile` — le chat ne raconte jamais une dispo périmée.
+ * `availability` est obligatoire : il vient de /admin, dont le repli est déjà
+ * `DEFAULT_AVAILABILITY`. Une seule couche décide du défaut, donc le chat ne
+ * peut pas raconter une disponibilité périmée.
  */
-export function buildKnowledgeBase(availability?: string): string {
+export function buildKnowledgeBase(availability: string): string {
   const projects = getAllProjects()
     .map((p) => {
       const links = p.links
@@ -148,10 +144,12 @@ export function buildKnowledgeBase(availability?: string): string {
 ## Identité
 - ${profile.title}, basée à ${profile.location}.
 - Accroche : ${profile.pitch}
-- Disponibilité : ${availability ?? profile.availability}
+- Disponibilité : ${availability}
 - Langues : ${profile.languages.join(", ")}.
 - Centres d'intérêt : ${profile.interests.join(", ")}.
 - Contact : ${profile.contact.emails.join(" / ")}.
+- GitHub : ${profile.contact.github.href}
+- LinkedIn : ${profile.contact.linkedin.href}
 
 ## Ce qui me caractérise
 ${profile.values.map((v) => `- ${v}`).join("\n")}

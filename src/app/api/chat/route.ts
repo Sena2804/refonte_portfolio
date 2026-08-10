@@ -5,6 +5,7 @@ import {
 } from "@/lib/chat/providers";
 import { buildKnowledgeBase, persona } from "@/lib/knowledge";
 import { describeAvailability, getAvailability } from "@/lib/availability";
+import { clientKey, slidingWindow } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -24,22 +25,7 @@ async function buildSystemPrompt(): Promise<string> {
   ].join("\n");
 }
 
-// Rate-limit en mémoire, best-effort (par instance serverless).
-const WINDOW_MS = 10 * 60 * 1000;
-const MAX_HITS = 20;
-const hits = new Map<string, number[]>();
-
-function isAllowed(ip: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-  if (recent.length >= MAX_HITS) {
-    hits.set(ip, recent);
-    return false;
-  }
-  recent.push(now);
-  hits.set(ip, recent);
-  return true;
-}
+const limiter = slidingWindow({ max: 20, windowMs: 10 * 60 * 1000 });
 
 function parseMessages(input: unknown): ChatMessage[] | null {
   if (!Array.isArray(input) || input.length === 0 || input.length > 20) {
@@ -72,8 +58,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
-  if (!isAllowed(ip)) {
+  if (!limiter.take(clientKey(req.headers))) {
     return Response.json(
       { error: "rate_limited", message: "Trop de messages, réessaie dans un moment." },
       { status: 429 },

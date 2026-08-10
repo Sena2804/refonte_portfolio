@@ -10,7 +10,17 @@
  * défaut, écriture en mémoire du process (utile en local, jamais persistée).
  */
 
-export type AvailabilityStatus = "open" | "limited" | "closed";
+/** Libellés publics. C'est cette table qui définit les statuts existants. */
+export const STATUS_LABELS = {
+  open: "Disponible",
+  limited: "Peu de créneaux",
+  closed: "Indisponible",
+} as const;
+
+export type AvailabilityStatus = keyof typeof STATUS_LABELS;
+
+/** Ordre d'affichage, dérivé pour ne pas pouvoir se désynchroniser des libellés. */
+export const STATUS_ORDER = Object.keys(STATUS_LABELS) as AvailabilityStatus[];
 
 export type Availability = {
   status: AvailabilityStatus;
@@ -24,13 +34,8 @@ export type Availability = {
 
 export const AVAILABILITY_TAG = "availability";
 
-export const STATUS_LABELS: Record<AvailabilityStatus, string> = {
-  open: "Disponible",
-  limited: "Peu de créneaux",
-  closed: "Indisponible",
-};
-
-export const STATUS_ORDER: AvailabilityStatus[] = ["open", "limited", "closed"];
+/** Longueur max de la phrase — partagée avec le champ de saisie de /admin. */
+export const MESSAGE_MAX = 180;
 
 export const DEFAULT_AVAILABILITY: Availability = {
   status: "open",
@@ -41,7 +46,6 @@ export const DEFAULT_AVAILABILITY: Availability = {
 };
 
 const KV_KEY = "portfolio-availability";
-const MESSAGE_MAX = 180;
 const BUSY_DATES_MAX = 62;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -58,6 +62,11 @@ export function isStorageConfigured(): boolean {
 
 /** Repli local quand Upstash n'est pas configuré — volatile, jamais persisté. */
 let memoryStore: Availability | null = null;
+
+/** Clé "YYYY-MM-DD" à partir d'une date locale (pas d'UTC : on suit l'affichage). */
+export function toDateKey(year: number, month: number, day: number): string {
+  return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
 
 /** Une date "YYYY-MM-DD" réelle (rejette 2026-02-31). */
 export function isValidDate(value: string): boolean {
@@ -100,7 +109,36 @@ export function parseAvailability(input: unknown): Availability {
   return { status, message, busyDates, updatedAt };
 }
 
-export async function getAvailability(): Promise<Availability> {
+/**
+ * État d'une journée dans le calendrier. Source unique : la grille, la légende
+ * et les couleurs en dépendent toutes, donc elles ne peuvent pas se contredire.
+ *
+ * - `free` : ouverte à un rendez-vous (week-end, si le statut n'est pas fermé)
+ * - `busy` : explicitement bloquée depuis /admin
+ * - `idle` : jour ordinaire, rien à signaler
+ */
+export type DayState = "free" | "busy" | "idle";
+
+export function dayState(
+  availability: Availability,
+  day: { key: string; weekend: boolean },
+): DayState {
+  if (availability.busyDates.includes(day.key)) return "busy";
+  // Statut fermé : plus aucun jour n'est proposé, week-ends compris. Sans ça le
+  // hero afficherait « Indisponible » au-dessus de week-ends peints en accent.
+  if (availability.status === "closed") return "idle";
+  return day.weekend ? "free" : "idle";
+}
+
+/**
+ * Lit la disponibilité.
+ *
+ * `fresh` court-circuite le Data Cache — réservé à /admin, qui doit montrer ce
+ * qui est réellement stocké. Attention : `dynamic = "force-dynamic"` ne suffit
+ * PAS à obtenir cet effet, car un `cache` explicite sur le fetch prime sur lui
+ * (cf. `noFetchConfigAndForceDynamic` dans le patch-fetch de Next).
+ */
+export async function getAvailability({ fresh = false } = {}): Promise<Availability> {
   const config = kvConfig();
   if (!config) return memoryStore ?? DEFAULT_AVAILABILITY;
 
@@ -109,8 +147,12 @@ export async function getAvailability(): Promise<Availability> {
       headers: { Authorization: `Bearer ${config.token}` },
       // Étiqueté pour rester prérendu ; `revalidate` est un filet de sécurité
       // si la valeur est modifiée directement dans Upstash, hors /admin.
-      cache: "force-cache",
-      next: { tags: [AVAILABILITY_TAG], revalidate: 3600 },
+      ...(fresh
+        ? { cache: "no-store" as const }
+        : {
+            cache: "force-cache" as const,
+            next: { tags: [AVAILABILITY_TAG], revalidate: 3600 },
+          }),
     });
     if (!res.ok) return DEFAULT_AVAILABILITY;
 
@@ -124,12 +166,19 @@ export async function getAvailability(): Promise<Availability> {
   }
 }
 
-/** Écrit la disponibilité. Retourne false si le stockage a refusé l'écriture. */
-export async function setAvailability(value: Availability): Promise<boolean> {
+/**
+ * Écrit la disponibilité.
+ *
+ * `persisted` distingue une vraie écriture d'un repli en mémoire, pour que
+ * /admin puisse le dire au lieu d'annoncer un succès trompeur.
+ */
+export async function setAvailability(
+  value: Availability,
+): Promise<{ ok: boolean; persisted: boolean }> {
   const config = kvConfig();
   if (!config) {
     memoryStore = value;
-    return true;
+    return { ok: true, persisted: false };
   }
 
   try {
@@ -142,9 +191,9 @@ export async function setAvailability(value: Availability): Promise<boolean> {
       body: JSON.stringify(value),
       cache: "no-store",
     });
-    return res.ok;
+    return { ok: res.ok, persisted: res.ok };
   } catch {
-    return false;
+    return { ok: false, persisted: false };
   }
 }
 

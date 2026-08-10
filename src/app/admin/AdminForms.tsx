@@ -4,6 +4,7 @@ import { useActionState, useId } from "react";
 import { Button } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import {
+  MESSAGE_MAX,
   STATUS_LABELS,
   STATUS_ORDER,
   type Availability,
@@ -100,14 +101,14 @@ export function AvailabilityForm({ initial }: { initial: Availability }) {
           id={messageId}
           name="message"
           rows={3}
-          maxLength={180}
+          maxLength={MESSAGE_MAX}
           required
           defaultValue={initial.message}
           className={cn(fieldClasses, "resize-y leading-relaxed")}
         />
         <p className="text-xs text-muted">
-          Visible dans le hero, et reprise telle quelle par le chat. 180
-          caractères max.
+          Visible dans le hero, et reprise telle quelle par le chat.{" "}
+          {MESSAGE_MAX} caractères max.
         </p>
       </div>
 

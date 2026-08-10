@@ -6,8 +6,12 @@ import Footer from "@/components/Footer";
 import { ThemeProvider, ThemeScript } from "@/components/ThemeProvider";
 import { PageTransition } from "@/components/ui";
 import { AskMe } from "@/components/ai/AskMe";
+import { getChatConfig } from "@/lib/chat/providers";
 
-const chatEnabled = process.env.NEXT_PUBLIC_CHAT_ENABLED === "true";
+// Le widget suit la config réelle du fournisseur : pas de second interrupteur à
+// tenir à la main. Une clé présente => le chat s'affiche ; pas de clé => rien,
+// et jamais une bulle visible qui répondrait 503 au premier message.
+const chatEnabled = getChatConfig() !== null;
 
 const sans = Geist({
   subsets: ["latin"],

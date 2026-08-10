@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Heading, Page, Section, SectionLabel } from "@/components/ui";
+import { Button, Card, Heading, Page, Section, SectionLabel } from "@/components/ui";
 import {
   getAvailability,
   isStorageConfigured,
   STATUS_LABELS,
 } from "@/lib/availability";
+import { SITE_LOCATION } from "@/lib/site";
 import { isAdminConfigured } from "@/lib/admin-session";
 import { AvailabilityForm, LoginForm } from "./AdminForms";
 import { isAuthenticated, logout } from "./actions";
@@ -13,8 +14,10 @@ import { isAuthenticated, logout } from "./actions";
  * Toujours rendue à la demande. Sans ça, la page se prérend au build selon les
  * variables d'environnement présentes à ce moment-là : elle resterait figée sur
  * « module en veille » si les secrets ne sont ajoutés qu'après le déploiement.
- * Effet de bord voulu : la lecture de la disponibilité ici ignore le cache et
- * affiche donc toujours la valeur réellement stockée.
+ *
+ * À noter : ça ne suffit PAS à contourner le cache de la lecture — un `cache`
+ * explicite sur un fetch prime sur `force-dynamic`. D'où le `{ fresh: true }`
+ * plus bas, qui lui garantit d'afficher la valeur réellement stockée.
  */
 export const dynamic = "force-dynamic";
 
@@ -26,9 +29,12 @@ export const metadata: Metadata = {
 
 function Notice({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mt-8 max-w-xl rounded-xl border border-border bg-surface/50 px-5 py-4 text-sm leading-relaxed text-muted">
+    <Card
+      padding="sm"
+      className="mt-8 max-w-xl bg-surface/50 text-sm leading-relaxed text-muted"
+    >
       {children}
-    </p>
+    </Card>
   );
 }
 
@@ -69,14 +75,16 @@ export default async function AdminPage() {
 }
 
 async function AuthenticatedPanel() {
-  const availability = await getAvailability();
+  // Lecture non mise en cache : le panneau doit montrer ce qui est stocké,
+  // même si la valeur a été modifiée hors de /admin.
+  const availability = await getAvailability({ fresh: true });
   const persistent = isStorageConfigured();
 
   const updated = availability.updatedAt
     ? new Intl.DateTimeFormat("fr-FR", {
         dateStyle: "long",
         timeStyle: "short",
-        timeZone: "Africa/Porto-Novo",
+        timeZone: SITE_LOCATION.timeZone,
       }).format(new Date(availability.updatedAt))
     : null;
 
@@ -102,12 +110,13 @@ async function AuthenticatedPanel() {
       <AvailabilityForm initial={availability} />
 
       <form action={logout} className="mt-14 border-t border-border pt-8">
-        <button
+        <Button
           type="submit"
-          className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted underline-offset-4 transition-colors duration-200 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+          variant="link"
+          className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted hover:text-foreground"
         >
           Se déconnecter
-        </button>
+        </Button>
       </form>
     </>
   );

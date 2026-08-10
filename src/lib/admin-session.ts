@@ -1,4 +1,5 @@
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
+import { slidingWindow } from "./rate-limit";
 
 /**
  * Session admin minimale : un cookie httpOnly signé HMAC-SHA256.
@@ -63,28 +64,13 @@ export function verifySessionToken(
   return Number.isFinite(expiresAt) && expiresAt > now;
 }
 
-/**
- * Limitation des tentatives de connexion, en mémoire et best-effort (une
- * instance serverless a sa propre fenêtre). Suffisant pour casser le
- * bourrinage naïf sur un mot de passe unique.
- */
-const ATTEMPT_WINDOW_MS = 15 * 60 * 1000;
-const MAX_ATTEMPTS = 8;
-const attempts = new Map<string, number[]>();
+/** Casse le bourrinage naïf sur un mot de passe unique. */
+const attempts = slidingWindow({ max: 8, windowMs: 15 * 60 * 1000 });
 
 export function registerLoginAttempt(key: string, now = Date.now()): boolean {
-  const recent = (attempts.get(key) ?? []).filter(
-    (t) => now - t < ATTEMPT_WINDOW_MS,
-  );
-  if (recent.length >= MAX_ATTEMPTS) {
-    attempts.set(key, recent);
-    return false;
-  }
-  recent.push(now);
-  attempts.set(key, recent);
-  return true;
+  return attempts.take(key, now);
 }
 
 export function clearLoginAttempts(key: string): void {
-  attempts.delete(key);
+  attempts.reset(key);
 }

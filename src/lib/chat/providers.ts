@@ -23,7 +23,10 @@ export function getChatConfig(): ChatConfig | null {
     return {
       provider,
       apiKey: process.env.GEMINI_API_KEY,
-      model: process.env.CHAT_MODEL || "gemini-2.0-flash",
+      // Alias qui suit le modèle Flash courant. Les modèles datés
+      // (gemini-2.0-flash, gemini-2.5-flash…) sont soit fermés aux nouveaux
+      // comptes, soit à quota gratuit nul selon le projet Google.
+      model: process.env.CHAT_MODEL || "gemini-flash-latest",
     };
   }
   if (provider === "groq" && process.env.GROQ_API_KEY) {

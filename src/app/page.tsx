@@ -17,6 +17,7 @@ import {
 import type { Stat } from "@/components/ui";
 import { getAllProjects, getProjectBySlug } from "@/lib/projects";
 import { getAvailability } from "@/lib/availability";
+import { CONTACT } from "@/lib/site";
 
 const stack = [
   "React",
@@ -59,6 +60,28 @@ const featured = FEATURED_SLUGS.map((slug, i) => {
     stack: project.stack.slice(0, 4),
   };
 });
+
+// Un seul style de lien de contact, sur les tokens du thème (donc valable en
+// sombre) et aligné sur le `group-hover:text-accent` du reste de la page.
+const contactLink =
+  "font-display text-[clamp(1.25rem,2.5vw,1.75rem)] leading-tight tracking-tight underline-offset-[6px] transition-colors duration-200 hover:underline group-hover:text-accent";
+
+function ContactRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <li className="group flex flex-wrap items-baseline justify-between gap-4 py-6">
+      <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+        {label}
+      </span>
+      {children}
+    </li>
+  );
+}
 
 const pillars = [
   {
@@ -255,51 +278,39 @@ export default async function HomePage() {
 
         <Reveal delay={240}>
           <ul className="mt-12 divide-y divide-border border-y border-border">
-            <li className="group flex flex-wrap items-baseline justify-between gap-4 py-6">
-              <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
-                E-mail
-              </span>
+            <ContactRow label="E-mail">
               <div className="flex flex-col gap-2">
-                <a
-                  href="mailto:mensahsena03@gmail.com"
-                  className="font-display text-indigo-700 text-[clamp(1.25rem,2.5vw,1.75rem)] leading-tight tracking-tight transition-colors duration-200 hover:underline hover:text-indigo-900"
-                >
-                  mensahsena03@gmail.com
-                </a>
-                <a
-                  href="mailto:premicia.mensah@epitech.eu"
-                  className="font-display text-indigo-700 text-[clamp(1.25rem,2.5vw,1.75rem)] leading-tight tracking-tight transition-colors duration-200 hover:underline hover:text-indigo-900"
-                >
-                  premicia.mensah@epitech.eu
-                </a>
+                {CONTACT.emails.map((email) => (
+                  <a
+                    key={email}
+                    href={`mailto:${email}`}
+                    className={contactLink}
+                  >
+                    {email}
+                  </a>
+                ))}
               </div>
-            </li>
-            <li className="group flex flex-wrap items-baseline justify-between gap-4 py-6">
-              <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
-                LinkedIn
-              </span>
+            </ContactRow>
+            <ContactRow label="LinkedIn">
               <a
-                href="https://www.linkedin.com/in/pr%C3%A9micia-mensah/"
+                href={CONTACT.linkedin.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-display text-indigo-700 text-[clamp(1.25rem,2.5vw,1.75rem)] leading-tight tracking-tight transition-colors duration-200 hover:underline hover:text-indigo-900"
+                className={contactLink}
               >
-                linkedin.com/in/pr%C3%A9micia-mensah/
+                {CONTACT.linkedin.label}
               </a>
-            </li>
-            <li className="group flex flex-wrap items-baseline justify-between gap-4 py-6">
-              <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
-                GitHub
-              </span>
+            </ContactRow>
+            <ContactRow label="GitHub">
               <a
-                href="https://github.com/Sena2804"
+                href={CONTACT.github.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-display text-indigo-700 text-[clamp(1.25rem,2.5vw,1.75rem)] leading-tight tracking-tight transition-colors duration-200 hover:underline hover:text-indigo-900"
+                className={contactLink}
               >
-                github.com/premicia
+                {CONTACT.github.label}
               </a>
-            </li>
+            </ContactRow>
           </ul>
         </Reveal>
       </Section>

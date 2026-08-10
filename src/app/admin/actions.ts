@@ -20,6 +20,7 @@ import {
   STATUS_ORDER,
   type AvailabilityStatus,
 } from "@/lib/availability";
+import { clientKey } from "@/lib/rate-limit";
 
 export type ActionState = { error?: string; success?: string };
 
@@ -27,11 +28,6 @@ export type ActionState = { error?: string; success?: string };
 export async function isAuthenticated(): Promise<boolean> {
   const store = await cookies();
   return verifySessionToken(store.get(ADMIN_COOKIE)?.value);
-}
-
-async function clientKey(): Promise<string> {
-  const list = await headers();
-  return list.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
 }
 
 export async function login(
@@ -42,7 +38,8 @@ export async function login(
     return { error: "Le module n'est pas configuré sur ce déploiement." };
   }
 
-  if (!registerLoginAttempt(await clientKey())) {
+  const key = clientKey(await headers());
+  if (!registerLoginAttempt(key)) {
     return { error: "Trop de tentatives. Réessaie dans quelques minutes." };
   }
 
@@ -51,7 +48,7 @@ export async function login(
     return { error: "Mot de passe incorrect." };
   }
 
-  clearLoginAttempts(await clientKey());
+  clearLoginAttempts(key);
   const store = await cookies();
   store.set(ADMIN_COOKIE, createSessionToken(), {
     httpOnly: true,
@@ -91,12 +88,10 @@ export async function saveAvailability(
   }
 
   // Une date par ligne dans le textarea.
+  const rawBusy = formData.get("busyDates");
   const rawDates =
-    typeof formData.get("busyDates") === "string"
-      ? String(formData.get("busyDates"))
-          .split(/[\s,;]+/)
-          .map((d) => d.trim())
-          .filter(Boolean)
+    typeof rawBusy === "string"
+      ? rawBusy.split(/[\s,;]+/).map((d) => d.trim()).filter(Boolean)
       : [];
 
   const invalid = rawDates.filter((d) => !isValidDate(d));
@@ -111,12 +106,17 @@ export async function saveAvailability(
     updatedAt: new Date().toISOString(),
   });
 
-  if (!(await setAvailability(value))) {
+  const { ok, persisted } = await setAvailability(value);
+  if (!ok) {
     return { error: "Le stockage n'a pas accepté l'écriture. Réessaie." };
   }
 
   // Invalide la lecture étiquetée : le hero et le chat repartent sur la
   // nouvelle valeur dès la prochaine visite (read-your-own-writes).
   updateTag(AVAILABILITY_TAG);
-  return { success: "Disponibilité mise à jour." };
+  return {
+    success: persisted
+      ? "Disponibilité mise à jour."
+      : "Appliqué, mais non enregistré : sans stockage configuré, la valeur repart au redémarrage.",
+  };
 }
