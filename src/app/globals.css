@@ -10,7 +10,10 @@
   --border: #E4E2DB;
   --accent: #1E2A4A;
   --accent-soft: #E8EAF1;
-  --ok: #1F9D63;
+  /* Assombri depuis #1F9D63 : à 3,23:1 sur le fond et 2,93:1 sur les surfaces,
+     l'ancien vert échouait au contraste AA dès qu'il servait de texte
+     (message de succès de /admin). Même teinte, 5,05:1 / 4,58:1. */
+  --ok: #18794C;
 }
 
 .dark {

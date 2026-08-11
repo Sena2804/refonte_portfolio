@@ -56,7 +56,7 @@ const projects: TimelineItem[] = [
 // Stages et formations viennent de la source unique `career.ts`, partagée avec
 // /cv et la base de connaissances du chat.
 const internships: TimelineItem[] = EXPERIENCES.map((x) => ({
-  period: longPeriod(x.start, { end: x.end }),
+  period: longPeriod(x.start, { end: x.end, ongoing: x.ongoing }),
   title: x.org,
   detail: `${x.role} — ${x.summary}`,
   tags: x.stack,

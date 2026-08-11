@@ -12,7 +12,10 @@ export type Experience = {
   role: string;
   place: string;
   start: string;
-  end: string;
+  /** Absent quand la mission est toujours en cours. */
+  end?: string;
+  /** Mission en cours → « depuis … ». Prime sur `end`. */
+  ongoing?: boolean;
   summary: string;
   stack: string[];
   /** Sous NDA : on cite les technologies, jamais le produit. */
@@ -35,10 +38,10 @@ export const EXPERIENCES: Experience[] = [
     role: "Développeuse full-stack (stage, remote)",
     place: "Remote",
     start: "2026-01",
-    end: "2026-07",
+    ongoing: true,
     summary:
       "Stage en développement web full-stack, en remote. Les projets sont couverts par un accord de confidentialité : seules les technologies employées sont mentionnées.",
-    stack: ["React.js", "Laravel", "MySQL"],
+    stack: ["React.js", "Laravel", "MySQL", "PostgreSQL", "Flutter"],
     confidential: true,
   },
   {
@@ -125,12 +128,17 @@ export function longPeriod(
     : `${fromLabel} ${from.year} – ${toLabel}${to.year}`;
 }
 
-/** Forme compacte pour le CV : « 02 – 05 / 2026 », « 07 / 2025 », « 2024 ». */
-export function shortPeriod(start: string, end?: string): string {
+/** Forme compacte pour le CV : « 02 – 05 / 2026 », « depuis 01 / 2026 », « 2024 ». */
+export function shortPeriod(
+  start: string,
+  end?: string,
+  { ongoing }: { ongoing?: boolean } = {},
+): string {
   const from = parse(start);
   if (from.month === undefined) return from.year;
 
   const pad = (m: number) => String(m + 1).padStart(2, "0");
+  if (ongoing) return `depuis ${pad(from.month)} / ${from.year}`;
   if (!end) return `${pad(from.month)} / ${from.year}`;
 
   const to = parse(end);

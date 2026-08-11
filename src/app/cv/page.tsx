@@ -27,7 +27,7 @@ const competences = SKILL_LEVELS.map((l) => ({
 
 // Stages et formations : source unique `career.ts`, partagée avec /parcours.
 const stages = EXPERIENCES.map((x) => ({
-  period: shortPeriod(x.start, x.end),
+  period: shortPeriod(x.start, x.end, { ongoing: x.ongoing }),
   title: x.org,
   detail: x.stack.length
     ? `${x.role} — ${x.stack.join(", ")}.`

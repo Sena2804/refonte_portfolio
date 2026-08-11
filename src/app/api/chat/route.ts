@@ -1,4 +1,5 @@
 import {
+  ChatProviderError,
   getChatConfig,
   streamChat,
   type ChatMessage,
@@ -85,10 +86,17 @@ export async function POST(req: Request) {
         for await (const delta of streamChat(config, systemPrompt, messages)) {
           controller.enqueue(encoder.encode(delta));
         }
-      } catch {
+      } catch (error) {
+        // Quota épuisé ≠ panne. Formulation volontairement neutre sur la
+        // durée : un 429 peut venir d'une limite par minute (transitoire) ou
+        // par jour (définitive), et on ne sait pas laquelle depuis ici.
+        const quota =
+          error instanceof ChatProviderError && error.reason === "quota";
         controller.enqueue(
           encoder.encode(
-            "\n\nDésolée, une erreur est survenue. Réessaie ou écris-moi par e-mail.",
+            quota
+              ? "\n\nJe suis à court de messages pour le moment — le chat tourne sur une offre gratuite. Réessaie dans un instant, ou écris-moi par e-mail : je réponds directement."
+              : "\n\nDésolée, une erreur est survenue. Réessaie ou écris-moi par e-mail.",
           ),
         );
       } finally {

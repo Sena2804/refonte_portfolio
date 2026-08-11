@@ -17,7 +17,7 @@ export const SKILL_LEVELS: {
   {
     level: "company",
     label: "Utilisé en entreprise",
-    note: "Mis en œuvre pendant mes stages, sur des livrables réels.",
+    note: "Mis en œuvre en contexte professionnel, sur des livrables réels.",
   },
   {
     level: "project",
@@ -39,6 +39,10 @@ export const SKILLS: Skill[] = [
   { name: "Laravel", domain: "Back-end", level: "company" },
   { name: "Django", domain: "Back-end", level: "company" },
   { name: "Streamlit", domain: "Back-end", level: "company" },
+  // Mobile en entreprise : projet Flutter en cours. Le mobile est une pratique
+  // professionnelle réelle — moins étendue que le web, mais pas théorique.
+  { name: "Flutter", domain: "Mobile", level: "company" },
+  { name: "Dart", domain: "Mobile", level: "company" },
   { name: "MySQL", domain: "Bases de données", level: "company" },
   { name: "PostgreSQL", domain: "Bases de données", level: "company" },
 
@@ -48,8 +52,7 @@ export const SKILLS: Skill[] = [
   { name: "Tailwind CSS", domain: "Front-end", level: "project" },
   { name: "React Native", domain: "Mobile", level: "project" },
   { name: "Expo", domain: "Mobile", level: "project" },
-  { name: "Flutter", domain: "Mobile", level: "project" },
-  { name: "Dart", domain: "Mobile", level: "project" },
+  { name: "Node.js", domain: "Back-end", level: "project" },
   { name: "Nest.js", domain: "Back-end", level: "project" },
   { name: "Flask", domain: "Back-end", level: "project" },
   { name: "JavaScript", domain: "Langages", level: "project" },
@@ -74,6 +77,7 @@ export const TOOLS = [
   "Postman",
   "Figma",
   "Trello",
+  "Notion",
   "Linux",
 ];
 

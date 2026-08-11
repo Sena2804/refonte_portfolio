@@ -15,7 +15,7 @@ const SUGGESTIONS = [
 
 /**
  * Chat « moi » : une version IA de Prémicia, ancrée sur sa base de connaissances.
- * Affiché uniquement si NEXT_PUBLIC_CHAT_ENABLED = "true" (gardé dans le layout).
+ * Monté par le layout uniquement si un fournisseur LLM est configuré.
  * Streaming token par token depuis /api/chat. Dégradation propre si désactivé.
  */
 export function AskMe() {

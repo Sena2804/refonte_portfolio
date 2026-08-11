@@ -4,6 +4,26 @@
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 
+/**
+ * Panne côté fournisseur, qualifiée pour que l'UI dise la vérité au visiteur.
+ * `quota` mérite un message distinct : sur les paliers gratuits il survient
+ * pour de bon (Gemini free tier = 20 requêtes/jour), et « une erreur est
+ * survenue » laisserait croire à un bug du site.
+ */
+export class ChatProviderError extends Error {
+  constructor(readonly reason: "quota" | "provider", message: string) {
+    super(message);
+    this.name = "ChatProviderError";
+  }
+}
+
+function failed(provider: string, status: number): never {
+  throw new ChatProviderError(
+    status === 429 ? "quota" : "provider",
+    `${provider} ${status}`,
+  );
+}
+
 export type ChatConfig = {
   provider: "gemini" | "groq";
   apiKey: string;
@@ -33,7 +53,11 @@ export function getChatConfig(): ChatConfig | null {
     return {
       provider,
       apiKey: process.env.GROQ_API_KEY,
-      model: process.env.CHAT_MODEL || "llama-3.1-8b-instant",
+      // gpt-oss-120b plutôt que llama-3.1-8b-instant : le 8B ne tient pas la
+      // persona (il vouvoie et contourne le refus du hors-sujet). Il autorise
+      // plus de messages par jour, mais un chat qui sort de son rôle dessert
+      // plus qu'il ne sert.
+      model: process.env.CHAT_MODEL || "openai/gpt-oss-120b",
     };
   }
   return null;
@@ -80,7 +104,7 @@ async function* streamGemini(
       generationConfig: { temperature: 0.4, maxOutputTokens: 800 },
     }),
   });
-  if (!res.ok) throw new Error(`Gemini ${res.status}`);
+  if (!res.ok) failed("Gemini", res.status);
   for await (const data of sseData(res)) {
     if (data === "[DONE]") break;
     try {
@@ -114,7 +138,7 @@ async function* streamGroq(
       messages: [{ role: "system", content: system }, ...messages],
     }),
   });
-  if (!res.ok) throw new Error(`Groq ${res.status}`);
+  if (!res.ok) failed("Groq", res.status);
   for await (const data of sseData(res)) {
     if (data === "[DONE]") break;
     try {

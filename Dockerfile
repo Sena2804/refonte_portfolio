@@ -33,19 +33,35 @@ WORKDIR /app
 # et désactive les messages de développement).
 ENV NODE_ENV=production
 
-# On réinstalle les dépendances, mais avec --omit=dev : cette option saute
-# TypeScript, ESLint, les types... tout ce qui ne servait qu'à compiler.
-# C'est ici qu'on élimine le plus gros du poids.
-COPY package.json package-lock.json ./
-RUN npm ci --omit=dev
+# Sans cette ligne, server.js n'écouterait que sur localhost À L'INTÉRIEUR du
+# conteneur : la redirection de port ne verrait rien passer, et tu obtiendrais
+# un conteneur qui tourne, sans erreur dans les logs, et une page blanche.
+ENV HOSTNAME=0.0.0.0
 
-# Le pont entre les deux étages : on va chercher dans l'atelier le résultat de
-# la compilation, et uniquement lui.
-COPY --from=builder /app/.next ./.next
+# Par défaut un conteneur tourne en root. On crée un utilisateur sans privilège :
+# si l'application est compromise, l'attaquant hérite d'un compte qui ne peut
+# rien écrire.
+RUN addgroup --system --gid 1001 nodejs \
+ && adduser --system --uid 1001 nextjs
+
+# Les trois morceaux du mode standalone. Plus besoin de `npm ci` ici : Next a
+# déjà recopié dans `standalone` les seuls fichiers de node_modules utilisés.
+#
+#   1. les fichiers statiques (images, PDF) — Next ne les met PAS dans standalone
 COPY --from=builder /app/public ./public
+#   2. le serveur autonome + ses dépendances tracées. Le `./` déverse le contenu
+#      à la racine de /app, ce qui y place le server.js lancé par le CMD.
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+#   3. le JS/CSS compilé — que standalone ne recopie pas non plus. L'oublier
+#      donne un site qui démarre mais s'affiche sans style : l'erreur n°1.
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Tout ce qui suit s'exécute sans privilège.
+USER nextjs
 
 # Documentaire : EXPOSE n'ouvre aucun port. C'est le -p au lancement qui publie.
 EXPOSE 3000
 
 # La commande jouée au DÉMARRAGE du conteneur (et pas à sa construction).
-CMD ["npm", "run", "start"]
+# On lance directement Node : npm n'existe plus dans cette image.
+CMD ["node", "server.js"]

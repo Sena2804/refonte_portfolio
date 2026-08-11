@@ -34,9 +34,11 @@ function Pillar({
 }) {
   return (
     <div className="border-t border-border pt-8">
-      <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+      {/* h2 et non h3 : ces piliers suivent directement le h1 de la page, un
+          h3 créerait un saut de niveau dans la navigation au lecteur d'écran. */}
+      <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
         {heading}
-      </h3>
+      </h2>
       <ul className="mt-6 space-y-2 font-display text-xl leading-snug tracking-tight">
         {items.map((t) => (
           <li key={t}>{t}</li>
