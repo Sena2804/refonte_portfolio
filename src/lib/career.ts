@@ -37,8 +37,9 @@ export const EXPERIENCES: Experience[] = [
     org: "W.Technologies",
     role: "Développeuse full-stack (stage, remote)",
     place: "Remote",
+    // Ni date de fin ni mention « en cours » : l'affichage se limite au mois
+    // de début, sans rien affirmer sur le statut actuel du stage.
     start: "2026-01",
-    ongoing: true,
     summary:
       "Stage en développement web full-stack, en remote. Les projets sont couverts par un accord de confidentialité : seules les technologies employées sont mentionnées.",
     stack: ["React.js", "Laravel", "MySQL", "PostgreSQL", "Flutter"],
