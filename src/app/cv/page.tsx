@@ -9,6 +9,8 @@ import {
   SectionLabel,
   Tag,
 } from "@/components/ui";
+import { EDUCATION, EXPERIENCES, shortPeriod } from "@/lib/career";
+import { byDomain, SKILL_LEVELS, skillsAt, TOOLS } from "@/lib/skills";
 
 export const metadata: Metadata = {
   title: "CV",
@@ -16,18 +18,29 @@ export const metadata: Metadata = {
     "Curriculum vitae de Prémicia MENSAH, développeuse full-stack (React, Node.js, Python).",
 };
 
-const competences = [
-  { group: "Front-end", items: ["React.js", "Next.js", "Vue.js", "Tailwind CSS"] },
-  { group: "Back-end", items: ["Node.js", "Nest.js", "Laravel", "Flask"] },
-  {
-    group: "Langages",
-    items: ["JavaScript", "TypeScript", "Python", "PHP", "C", "C++"],
-  },
-  { group: "Bases de données", items: ["MySQL", "MongoDB", "PostgreSQL"] },
-  { group: "Outils", items: ["Git", "GitHub", "Postman", "Trello", "Linux"] },
-];
+// Compétences classées par niveau d'usage réel (source : src/lib/skills.ts),
+// puis par domaine à l'intérieur de chaque niveau.
+const competences = SKILL_LEVELS.map((l) => ({
+  ...l,
+  groups: byDomain(skillsAt(l.level)),
+}));
 
-const experiences = [
+// Stages et formations : source unique `career.ts`, partagée avec /parcours.
+const stages = EXPERIENCES.map((x) => ({
+  period: shortPeriod(x.start, x.end, { ongoing: x.ongoing }),
+  title: x.org,
+  detail: x.stack.length
+    ? `${x.role} — ${x.stack.join(", ")}.`
+    : `${x.role}.`,
+}));
+
+const formations = EDUCATION.map((e) => ({
+  period: shortPeriod(e.start),
+  title: e.school,
+  detail: e.detail,
+}));
+
+const projets = [
   {
     period: "11 / 2025",
     title: "My Show Time",
@@ -52,29 +65,6 @@ const experiences = [
     period: "02 / 2025",
     title: "Audify — Bootcamp BLO",
     detail: "Extraction PDF + text-to-speech.",
-  },
-];
-
-const formations = [
-  {
-    period: "07 / 2025",
-    title: "Coding Academy Epitech",
-    detail: "Formation full-stack.",
-  },
-  {
-    period: "10 / 2024",
-    title: "École 229",
-    detail: "Développement web et mobile.",
-  },
-  {
-    period: "2024",
-    title: "HECM",
-    detail: "Licence pro — Informatique industrielle et maintenance.",
-  },
-  {
-    period: "2020",
-    title: "Cours Secondaire Saint Augustin",
-    detail: "Baccalauréat série D.",
   },
 ];
 
@@ -157,30 +147,51 @@ export default function CVPage() {
                 <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
                   Compétences techniques
                 </h2>
-                <dl className="mt-6 space-y-6">
-                  {competences.map((c) => (
-                    <div key={c.group}>
-                      <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-foreground">
-                        {c.group}
-                      </dt>
-                      <dd className="mt-3 flex flex-wrap gap-2">
-                        {c.items.map((i) => (
-                          <Tag key={i}>{i}</Tag>
+                <div className="mt-6 space-y-8">
+                  {competences.map((niveau) => (
+                    <section key={niveau.level}>
+                      <h3 className="font-mono text-[11px] uppercase tracking-[0.16em] text-foreground">
+                        {niveau.label}
+                      </h3>
+                      <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
+                        {niveau.note}
+                      </p>
+                      <dl className="mt-4 space-y-4">
+                        {niveau.groups.map((g) => (
+                          <div key={g.domain}>
+                            <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+                              {g.domain}
+                            </dt>
+                            <dd className="mt-2 flex flex-wrap gap-2">
+                              {g.items.map((i) => (
+                                <Tag key={i}>{i}</Tag>
+                              ))}
+                            </dd>
+                          </div>
                         ))}
-                      </dd>
-                    </div>
+                      </dl>
+                    </section>
                   ))}
-                </dl>
+
+                  <section>
+                    <h3 className="font-mono text-[11px] uppercase tracking-[0.16em] text-foreground">
+                      Outils
+                    </h3>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {TOOLS.map((t) => (
+                        <Tag key={t}>{t}</Tag>
+                      ))}
+                    </div>
+                  </section>
+                </div>
               </div>
             </aside>
           </Reveal>
 
           <Reveal delay={100}>
             <div className="space-y-16">
-              <HistoryBlock
-                heading="Expériences & projets"
-                entries={experiences}
-              />
+              <HistoryBlock heading="Stages en entreprise" entries={stages} />
+              <HistoryBlock heading="Projets" entries={projets} />
               <HistoryBlock heading="Formations" entries={formations} />
             </div>
           </Reveal>

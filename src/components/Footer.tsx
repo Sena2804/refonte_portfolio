@@ -23,15 +23,18 @@ export default function Footer() {
             </p>
           </div>
 
+          {/* `py-1` porte la zone cliquable à 28px : sous 24px, WCAG 2.2
+              (2.5.8) considère la cible trop petite au doigt. Le `-my-1`
+              compense pour que l'alignement visuel ne bouge pas. */}
           <nav
             aria-label="Pied de page"
-            className="flex flex-wrap gap-x-8 gap-y-3 text-sm"
+            className="-my-1 flex flex-wrap gap-x-8 gap-y-1 text-sm"
           >
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-muted transition-colors duration-200 hover:text-foreground"
+                className="inline-flex items-center py-1 text-muted transition-colors duration-200 hover:text-foreground"
               >
                 {link.label}
               </Link>
@@ -43,7 +46,7 @@ export default function Footer() {
           <p>© {year} — Tous droits réservés</p>
           <a
             href="#top"
-            className="inline-flex items-center gap-2 transition-colors duration-200 hover:text-foreground"
+            className="-my-1 inline-flex items-center gap-2 py-1 transition-colors duration-200 hover:text-foreground"
           >
             <span aria-hidden>↑</span> Retour en haut
           </a>

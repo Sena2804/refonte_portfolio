@@ -18,23 +18,12 @@ import type { Stat } from "@/components/ui";
 import { getAllProjects, getProjectBySlug } from "@/lib/projects";
 import { getAvailability } from "@/lib/availability";
 import { CONTACT } from "@/lib/site";
+import { skillsAt } from "@/lib/skills";
 
-const stack = [
-  "React",
-  "Next.js",
-  "Vue.js",
-  "Node.js",
-  "Nest.js",
-  "Laravel",
-  "Flask",
-  "Python",
-  "TypeScript",
-  "Tailwind CSS",
-  "MongoDB",
-  "PostgreSQL",
-  "MySQL",
-  "Git",
-];
+// Bandeau défilant : les technologies réellement pratiquées, entreprise et
+// projets confondus. Source unique — le mobile y manquait alors que deux
+// applications livrées l'utilisent.
+const stack = [...skillsAt("company"), ...skillsAt("project")].map((s) => s.name);
 
 const stats: Stat[] = [
   { value: getAllProjects().length, pad: true, label: "Projets" },
@@ -270,9 +259,10 @@ export default async function HomePage() {
           </h2>
         </Reveal>
         <Reveal delay={160}>
+          {/* Même source que la pastille du hero : la page ne peut pas dire
+              « je suis disponible » pendant que le statut annonce l'inverse. */}
           <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted">
-            Je suis disponible pour des missions en full-stack, du prototypage
-            produit au déploiement.
+            {availability.message}
           </p>
         </Reveal>
 

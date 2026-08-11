@@ -7,6 +7,7 @@ import {
   Section,
   SectionLabel,
 } from "@/components/ui";
+import { skillsAt, TOOLS } from "@/lib/skills";
 
 export const metadata: Metadata = {
   title: "À propos",
@@ -14,27 +15,15 @@ export const metadata: Metadata = {
     "Prémicia MENSAH, développeuse full-stack béninoise. Parcours, valeurs et outils quotidiens.",
 };
 
-const tools = [
-  "VS Code",
-  "Linux",
-  "Git / GitHub",
-  "Postman",
-  "Figma",
-  "Notion",
-];
-
 const motivations = [
   "Produits utiles",
   "Équipes soudées",
   "Apprentissage continu",
 ];
 
-const learning = [
-  "Architecture logicielle",
-  "DevOps & CI/CD",
-  "Design produit",
-  "Machine Learning",
-];
+// Source unique : les mêmes listes alimentent /cv et la base du chat.
+const tools = TOOLS;
+const learning = skillsAt("learning").map((s) => s.name);
 
 function Pillar({
   heading,
@@ -45,9 +34,11 @@ function Pillar({
 }) {
   return (
     <div className="border-t border-border pt-8">
-      <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+      {/* h2 et non h3 : ces piliers suivent directement le h1 de la page, un
+          h3 créerait un saut de niveau dans la navigation au lecteur d'écran. */}
+      <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
         {heading}
-      </h3>
+      </h2>
       <ul className="mt-6 space-y-2 font-display text-xl leading-snug tracking-tight">
         {items.map((t) => (
           <li key={t}>{t}</li>

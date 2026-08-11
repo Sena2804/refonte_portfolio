@@ -1,0 +1,125 @@
+# Ce fichier doit impérativement se trouver dans .github/workflows/ :
+# c'est là et nulle part ailleurs que GitHub va chercher les workflows.
+#
+# Suivi des exécutions : onglet « Actions » du dépôt sur github.com
+
+name: CI
+
+# --- QUAND ce workflow se déclenche ---------------------------------------
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+    branches: [main]
+
+# Si tu pousses deux fois d'affilée, l'exécution précédente encore en cours est
+# annulée : inutile de valider un commit déjà remplacé.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ==========================================================================
+  # JOB 1 — La qualité du code.
+  # ==========================================================================
+  qualite:
+    name: Lint et build
+    # La machine jetable fournie par GitHub. Elle démarre VIDE.
+    runs-on: ubuntu-latest
+
+    steps:
+      # Le runner n'a pas ton code : première chose à faire, le télécharger.
+      # `uses:` = on réutilise une action écrite par quelqu'un d'autre.
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Node
+        uses: actions/setup-node@v4
+        with:
+          # La même version que ton Dockerfile et ton .nvmrc. Trois endroits qui
+          # doivent rester d'accord, sinon tu déboguerais des écarts invisibles.
+          node-version: "24"
+          # Garde ~/.npm d'une exécution à l'autre : l'install passe d'environ
+          # 60 s à 10 s. La clé du cache est calculée sur package-lock.json.
+          cache: "npm"
+
+      # `npm ci` et non `install` — exactement pour les raisons vues ensemble :
+      # versions figées, lockfile jamais modifié, échec bruyant si incohérence.
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Linter
+        run: npm run lint
+
+      # Les tests AVANT le build : ils durent quelques secondes là où le build
+      # prend plusieurs minutes. Autant échouer vite quand il faut échouer.
+      - name: Tests
+        run: npm test
+
+      # `next build` échoue à la moindre erreur TypeScript : ce step sert donc
+      # aussi de vérification de types, sans commande supplémentaire.
+      - name: Builder
+        run: npm run build
+
+  # ==========================================================================
+  # JOB 2 — L'image Docker.
+  # ==========================================================================
+  image:
+    name: Image Docker
+    runs-on: ubuntu-latest
+    # `needs` crée une dépendance : ce job attend que `qualite` soit vert. Sans
+    # cette ligne, les deux jobs partiraient en parallèle et on publierait
+    # potentiellement une image dont le code ne compile même pas.
+    needs: qualite
+
+    # Droits accordés au jeton automatique de cette exécution. Par défaut il est
+    # en lecture seule : sans `packages: write`, la publication échouerait.
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      # Buildx : le moteur de build avancé de Docker. Nécessaire pour le cache
+      # partagé entre exécutions, à la dernière étape.
+      - name: Préparer Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Se connecter à GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          # Jeton créé par GitHub pour cette exécution puis révoqué aussitôt.
+          # Tu n'as AUCUN secret à créer toi-même.
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Calcule les noms/tags de l'image. `latest` seul serait ambigu : on
+      # n'aurait aucun moyen de savoir quel commit tourne. D'où le tag par SHA.
+      - name: Calculer les tags
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          # GHCR n'accepte que des minuscules ; cette action normalise
+          # « Sena2804/refonte_portfolio » toute seule.
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,format=long
+            type=ref,event=branch
+
+      - name: Construire et publier
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          # Sur les autres branches, on construit sans publier : ça vérifie que
+          # le Dockerfile reste valide, sans polluer le registre.
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Réutilise les couches d'une exécution à l'autre. `mode=max` met aussi
+          # en cache les étages intermédiaires — donc `npm ci`, le plus lent.
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

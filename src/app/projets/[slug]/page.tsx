@@ -53,7 +53,7 @@ function TwoCol({
   return (
     <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,220px)_1fr] lg:gap-24">
       <Reveal>
-        <SectionLabel>{label}</SectionLabel>
+        <SectionLabel as="h2">{label}</SectionLabel>
       </Reveal>
       <Reveal delay={100}>{children}</Reveal>
     </div>

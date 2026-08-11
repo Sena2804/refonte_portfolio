@@ -56,7 +56,7 @@ export default function Navbar() {
       <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-[clamp(1rem,4vw,2.5rem)]">
         <Link
           href="/"
-          className="font-mono text-[13px] uppercase tracking-[0.18em] text-foreground"
+          className="inline-flex items-center py-2 font-mono text-[13px] uppercase tracking-[0.18em] text-foreground"
         >
           Prémicia<span className="text-accent">.</span>dev
         </Link>

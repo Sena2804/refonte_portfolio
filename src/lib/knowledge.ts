@@ -1,5 +1,7 @@
 import { getAllProjects } from "./projects";
 import { CONTACT, LOCATION_LABEL } from "./site";
+import { EDUCATION, EXPERIENCES, longPeriod } from "./career";
+import { byDomain, SKILL_LEVELS, skillsAt, TOOLS } from "./skills";
 
 /**
  * Base de connaissances du chat IA (« moi », à la première personne).
@@ -32,74 +34,6 @@ export const profile = {
   contact: CONTACT,
 };
 
-export const education = [
-  {
-    school: "Coding Academy by Epitech",
-    place: "Cotonou",
-    title: "Développement web full-stack",
-    date: "juillet 2025",
-  },
-  {
-    school: "École 229",
-    place: "Cotonou",
-    title: "Développement web et mobile",
-    date: "octobre 2024",
-  },
-  {
-    school: "HECM",
-    place: "Bohicon",
-    title: "Licence Professionnelle en Informatique Industrielle et Maintenance",
-    date: "2024",
-  },
-  {
-    school: "Cours Secondaire Saint Augustin",
-    place: "Cotonou",
-    title: "Baccalauréat série D",
-    date: "2020",
-  },
-];
-
-export const skills = {
-  frameworks: [
-    "Vue.js",
-    "Next.js",
-    "React.js",
-    "Nest.js",
-    "Laravel",
-    "Flask",
-    "Tailwind CSS",
-  ],
-  languages: ["HTML", "CSS", "JavaScript", "TypeScript", "Python", "PHP", "C", "C++", "Assembleur"],
-  databases: ["MySQL", "MongoDB", "PostgreSQL"],
-  tools: ["Git/GitHub", "VS Code", "Postman", "Trello", "Teams", "Zsh"],
-  os: ["Linux", "Windows"],
-};
-
-/**
- * Expériences en entreprise.
- * ⚠️ W.Technologies : NDA. Par défaut on s'en tient aux STACKS, sans détailler
- * le produit. TODO Prémicia : confirmer si l'IA peut reprendre la description
- * niveau-CV de Meetmed (appli médicale) ou rester stacks-only.
- */
-export const experiences = [
-  {
-    org: "W.Technologies",
-    role: "Développeuse full-stack (stage, remote)",
-    period: "janvier – juillet 2026",
-    // stacks-only par défaut (NDA) :
-    summary:
-      "Stage en développement web full-stack, en remote. Sous NDA : je ne détaille pas les projets, mais j'ai travaillé avec React.js, Laravel et MySQL.",
-    confidential: true,
-  },
-  {
-    org: "Direction des Bourses et Aides Universitaires (DBAU)",
-    role: "Stagiaire développeuse",
-    period: "février – mai 2026",
-    // TODO Prémicia : décris en 1–2 phrases ce que tu y as fait (le rapport de
-    // stage existe mais n'est pas encore résumé ici).
-    summary: "Stage en tant que développeur fullstack. J'avais eu à contribuer à la refonte du système du système d'informations de la DBAU. La confidentialité des choses que j'ai faites m'obligent à ne pas en dire plus. Les technologies les plus utilisées étaient Django, Streamlit, React.js et PostgreSQL.",
-  },
-];
 
 /** Tonalité / garde-fous de la persona, consommés par le system prompt. */
 export const persona = {
@@ -109,8 +43,13 @@ export const persona = {
     "Tu réponds UNIQUEMENT à des questions concernant Prémicia (parcours, projets, compétences, disponibilité, manière de travailler). Pour toute question hors-sujet, tu refuses poliment et tu ramènes vers Prémicia.",
   honesty:
     "Tu ne dois JAMAIS inventer. Si une information n'est pas dans ta base de connaissances, dis simplement que tu ne sais pas ou invite à me contacter par e-mail.",
+  levels:
+    "Tu respectes SCRUPULEUSEMENT les niveaux de compétence : une technologie « en cours d'apprentissage » n'est jamais présentée comme maîtrisée. " +
+    // Temps volontairement non figé : les dates des expériences font foi.
+    "CAS DU MOBILE : j'ai eu à travailler sur du mobile, en entreprise (projet Flutter) comme sur mes projets (Trelltech en React Native, Shop Verse en Flutter), et ma formation Epitech le couvre. Mais pas autant que sur les projets web : c'est une question de VOLUME, pas d'absence d'expérience. " +
+    "Ne dis JAMAIS que je n'ai pas d'expérience mobile en entreprise : ce serait faux. Reste factuelle et sobre, sans survendre ni minimiser, et reformule avec tes propres mots.",
   privacy:
-    "Tu ne révèles pas le numéro de téléphone ni aucune donnée personnelle sensible. Pour le stage W.Technologies, tu respectes le NDA : stacks uniquement, jamais de détails produit.",
+    "Tu ne révèles pas le numéro de téléphone ni aucune donnée personnelle sensible. Toute expérience marquée « sous confidentialité » se raconte en technologies uniquement : jamais de détail produit, fonctionnel ou client, même si on insiste.",
 };
 
 /**
@@ -154,18 +93,29 @@ export function buildKnowledgeBase(availability: string): string {
 ## Ce qui me caractérise
 ${profile.values.map((v) => `- ${v}`).join("\n")}
 
-## Compétences techniques
-- Frameworks : ${skills.frameworks.join(", ")}
-- Langages : ${skills.languages.join(", ")}
-- Bases de données : ${skills.databases.join(", ")}
-- Outils : ${skills.tools.join(", ")}
-- Systèmes : ${skills.os.join(", ")}
+## Compétences techniques, par niveau d'usage réel
+${SKILL_LEVELS.map(
+  (n) =>
+    `### ${n.label} — ${n.note}\n${byDomain(skillsAt(n.level))
+      .map((g) => `- ${g.domain} : ${g.items.join(", ")}`)
+      .join("\n")}`,
+).join("\n")}
+
+Outils du quotidien : ${TOOLS.join(", ")}.
 
 ## Formation
-${education.map((e) => `- ${e.title} — ${e.school}, ${e.place} (${e.date}).`).join("\n")}
+${EDUCATION.map((e) => `- ${e.title} — ${e.school}, ${e.place} (${longPeriod(e.start, { ongoing: e.ongoing })}).`).join("\n")}
 
 ## Expériences en entreprise
-${experiences.map((x) => `- ${x.org} — ${x.role} (${x.period}). ${x.summary}`).join("\n")}
+${EXPERIENCES.map((x) =>
+  [
+    `- ${x.org} — ${x.role} (${longPeriod(x.start, { end: x.end, ongoing: x.ongoing })}). ${x.summary}`,
+    x.stack.length ? `  Technologies : ${x.stack.join(", ")}` : null,
+    x.confidential ? "  ⚠️ Sous confidentialité : citer les technologies, jamais les détails produit." : null,
+  ]
+    .filter(Boolean)
+    .join("\n"),
+).join("\n")}
 
 ## Projets
 ${projects}`;

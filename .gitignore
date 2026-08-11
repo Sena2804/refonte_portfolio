@@ -32,6 +32,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# ...sauf le gabarit : il ne contient aucune valeur et documente les variables
+# attendues. Sans lui, impossible de savoir quoi renseigner en clonant le dépôt.
+!.env.example
 
 # vercel
 .vercel
