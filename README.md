@@ -69,6 +69,13 @@ n'y a pas d'interrupteur séparé — laisser la clé vide suffit à le masquer.
 | `npm run build` | Build de production |
 | `npm run start` | Serveur de production |
 | `npm run lint` | ESLint |
+| `npm test` | Tests unitaires (Vitest) |
+| `npm run test:watch` | Tests en mode veille |
+
+Les tests couvrent la logique sensible et sans DOM : session admin (signature
+HMAC, expiration, falsification), normalisation des données de disponibilité et
+limiteur de débit. Ils tournent dans le CI avant le build, parce qu'ils
+échouent en quelques secondes là où le build prend plusieurs minutes.
 
 ## Structure
 
@@ -140,7 +147,8 @@ d'animation unique : `var(--ease-out-soft)`.
 - Accessibilité : un seul `h1` par page, pas de saut de niveau de titre, cibles
   cliquables d'au moins 24 px, `prefers-reduced-motion` respecté.
 - Liens externes : `target="_blank"` + `rel="noopener noreferrer"`.
-- `npm run lint` et `npm run build` doivent passer avant toute livraison.
+- `npm run lint`, `npm test` et `npm run build` doivent passer avant toute
+  livraison.
 
 ## Déploiement
 
@@ -167,8 +175,8 @@ fournies au `docker build`, pas seulement au `docker run`.
 ## Intégration continue
 
 `.github/workflows/ci.yml` — sur `main` et `feat/**` : installation, lint,
-build, puis construction de l'image Docker. L'image n'est publiée sur GHCR que
-depuis `main`.
+tests, build, puis construction de l'image Docker. L'image n'est publiée sur
+GHCR que depuis `main`.
 
 ## Agents IA
 

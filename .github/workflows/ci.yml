@@ -51,6 +51,11 @@ jobs:
       - name: Linter
         run: npm run lint
 
+      # Les tests AVANT le build : ils durent quelques secondes là où le build
+      # prend plusieurs minutes. Autant échouer vite quand il faut échouer.
+      - name: Tests
+        run: npm test
+
       # `next build` échoue à la moindre erreur TypeScript : ce step sert donc
       # aussi de vérification de types, sans commande supplémentaire.
       - name: Builder
