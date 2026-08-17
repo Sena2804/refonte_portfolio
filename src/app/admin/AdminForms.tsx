@@ -14,10 +14,10 @@ import { login, saveAvailability, type ActionState } from "./actions";
 const EMPTY: ActionState = {};
 
 const fieldClasses =
-  "w-full rounded-xl border border-border bg-background px-4 py-3 text-body text-foreground transition-colors duration-200 placeholder:text-faint focus:border-accent focus:outline-none";
+  "w-full rounded-xl border border-border bg-background px-4 py-3 text-[15px] text-foreground transition-colors duration-200 placeholder:text-faint focus:border-accent focus:outline-none";
 
 const labelClasses =
-  "block font-mono text-label uppercase tracking-[0.18em] text-foreground";
+  "block font-mono text-[11px] uppercase tracking-[0.18em] text-foreground";
 
 function Feedback({ state }: { state: ActionState }) {
   if (!state.error && !state.success) return null;
@@ -26,7 +26,7 @@ function Feedback({ state }: { state: ActionState }) {
       role="status"
       aria-live="polite"
       className={cn(
-        "text-small",
+        "text-sm",
         state.error ? "text-foreground" : "text-ok",
       )}
     >
@@ -78,7 +78,7 @@ export function AvailabilityForm({ initial }: { initial: Availability }) {
           {STATUS_ORDER.map((status) => (
             <label
               key={status}
-              className="group relative cursor-pointer rounded-full border border-border px-5 py-2.5 text-small transition-colors duration-200 has-[:checked]:border-accent has-[:checked]:bg-accent-soft has-[:checked]:text-accent has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-4 has-[:focus-visible]:outline-accent"
+              className="group relative cursor-pointer rounded-full border border-border px-5 py-2.5 text-sm transition-colors duration-200 has-[:checked]:border-accent has-[:checked]:bg-accent-soft has-[:checked]:text-accent has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-4 has-[:focus-visible]:outline-accent"
             >
               <input
                 type="radio"
@@ -106,7 +106,7 @@ export function AvailabilityForm({ initial }: { initial: Availability }) {
           defaultValue={initial.message}
           className={cn(fieldClasses, "resize-y leading-relaxed")}
         />
-        <p className="text-label text-foreground">
+        <p className="text-xs text-foreground">
           Visible dans le hero, et reprise telle quelle par le chat.{" "}
           {MESSAGE_MAX} caractères max.
         </p>
@@ -122,9 +122,9 @@ export function AvailabilityForm({ initial }: { initial: Availability }) {
           rows={4}
           defaultValue={initial.busyDates.join("\n")}
           placeholder={"2026-08-15\n2026-08-16"}
-          className={cn(fieldClasses, "resize-y font-mono text-small leading-relaxed")}
+          className={cn(fieldClasses, "resize-y font-mono text-sm leading-relaxed")}
         />
-        <p className="text-label text-foreground">
+        <p className="text-xs text-foreground">
           Une date par ligne, au format AAAA-MM-JJ. Ces jours apparaissent
           barrés dans le calendrier du hero.
         </p>

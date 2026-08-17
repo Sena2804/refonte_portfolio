@@ -19,7 +19,7 @@ export function SectionLabel({ number, children, className, as = "p" }: Props) {
     as,
     {
       className: cn(
-        "font-mono text-label uppercase tracking-[0.18em] text-foreground",
+        "font-mono text-[11px] uppercase tracking-[0.18em] text-foreground",
         className,
       ),
     },

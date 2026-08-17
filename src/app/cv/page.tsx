@@ -8,7 +8,6 @@ import {
   Reveal,
   Section,
   SectionLabel,
-  Tag,
 } from "@/components/ui";
 import { EDUCATION, EXPERIENCES, shortPeriod } from "@/lib/career";
 import { byDomain, SKILL_LEVELS, skillsAt, TOOLS } from "@/lib/skills";
@@ -43,37 +42,39 @@ const formations = EDUCATION.map((e) => ({
 
 const projets = [
   {
-    period: "11 / 2025",
+    period: "Novembre 2025",
     title: "My Show Time",
     detail: "Plateforme de réservation (Nest.js, MongoDB).",
   },
   {
-    period: "11 / 2025",
+    period: "Novembre 2025",
     title: "Calculatrice scientifique",
     detail: "Python, Flask, Tkinter — Shunting Yard.",
   },
   {
-    period: "10 / 2025",
+    period: "Octobre 2025",
     title: "Yowl",
     detail: "Avis clients Vue.js / Tailwind + Laravel / MySQL.",
   },
   {
-    period: "04 / 2025",
+    period: "Avril 2025",
     title: "Racines Virtuelles — BLOchallenge",
     detail: "Prototype mobile patrimoine culturel.",
   },
   {
-    period: "02 / 2025",
+    period: "Février 2025",
     title: "Audify — Bootcamp BLO",
     detail: "Extraction PDF + text-to-speech.",
   },
 ];
 
-/** Titre de partie : c'est l'échelle et l'espace qui le détachent, pas un
- *  filet. Un CV plein de traits horizontaux fait formulaire, pas portfolio. */
+/** Titre de partie. Le soulignement est porté ici et pas à chaque appel : les
+ *  six parties du CV (trois par colonne) restent ainsi identiques, et le style
+ *  du trait se règle en un seul endroit. Décalé et affiné, sinon la ligne vient
+ *  barrer les jambages de la police display. */
 function PartTitle({ children }: { children: ReactNode }) {
   return (
-    <h2 className="font-display text-item leading-tight tracking-tight">
+    <h2 className="font-display text-[clamp(1.25rem,1.8vw,1.5rem)] leading-tight tracking-tight underline decoration-1 underline-offset-[6px]">
       {children}
     </h2>
   );
@@ -95,14 +96,14 @@ function HistoryBlock({
             key={`${e.period}-${e.title}`}
             className="grid gap-1 sm:grid-cols-[104px_1fr] sm:gap-8"
           >
-            <span className="font-mono text-label uppercase tracking-[0.18em] tabular-nums text-foreground">
+            <span className="font-mono text-xs uppercase tracking-[0.16em] tabular-nums text-foreground">
               {e.period}
             </span>
             <div>
-              <h3 className="font-display text-sub leading-snug tracking-tight">
+              <h3 className="font-display text-lg leading-snug tracking-tight">
                 {e.title}
               </h3>
-              <p className="mt-1.5 text-body leading-relaxed text-foreground">
+              <p className="mt-1.5 text-sm leading-relaxed text-foreground">
                 {e.detail}
               </p>
             </div>
@@ -148,7 +149,7 @@ export default function CVPage() {
             <aside className="space-y-20">
               <section>
                 <PartTitle>Identité</PartTitle>
-                <div className="mt-6 space-y-1 text-body leading-relaxed text-foreground">
+                <div className="mt-6 space-y-1 text-sm leading-relaxed text-foreground">
                   <p>Prémicia S. E. Mensah</p>
                   <p>Développeuse full-stack</p>
                   <p>Cotonou, Bénin</p>
@@ -163,22 +164,25 @@ export default function CVPage() {
                 <div className="mt-8 space-y-10">
                   {competences.map((niveau) => (
                     <section key={niveau.level}>
-                      <h3 className="font-display text-sub leading-snug tracking-tight">
+                      {/* Souligné comme les titres de partie, avec un décalage
+                          plus court : le trait suit la taille du texte. */}
+                      <h3 className="font-display text-lg leading-snug tracking-tight underline decoration-1 underline-offset-[5px]">
                         {niveau.label}
                       </h3>
-                      <p className="mt-1.5 text-small leading-relaxed text-foreground">
+                      <p className="mt-1.5 text-[14px] leading-relaxed text-foreground">
                         {niveau.note}
                       </p>
-                      <dl className="mt-5 space-y-5">
+                      <dl className="mt-5 space-y-3">
                         {niveau.groups.map((g) => (
-                          <div key={g.domain}>
-                            <dt className="font-mono text-label uppercase tracking-[0.18em] text-foreground">
+                          <div
+                            key={g.domain}
+                            className="grid gap-x-5 gap-y-0.5 sm:grid-cols-[8rem_1fr]"
+                          >
+                            <dt className="text-[14px] italic leading-6 text-foreground underline">
                               {g.domain}
                             </dt>
-                            <dd className="mt-2.5 flex flex-wrap gap-2">
-                              {g.items.map((i) => (
-                                <Tag key={i}>{i}</Tag>
-                              ))}
+                            <dd className="text-sm leading-6 text-foreground">
+                              {g.items.join(", ")}
                             </dd>
                           </div>
                         ))}
@@ -190,11 +194,9 @@ export default function CVPage() {
 
               <section>
                 <PartTitle>Outils</PartTitle>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {TOOLS.map((t) => (
-                    <Tag key={t}>{t}</Tag>
-                  ))}
-                </div>
+                <p className="mt-6 text-sm leading-6 text-foreground">
+                  {TOOLS.join(", ")}
+                </p>
               </section>
             </aside>
           </Reveal>

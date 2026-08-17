@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Newsreader, Geist_Mono, Fraunces } from "next/font/google";
+import { Geist, Geist_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -14,12 +14,9 @@ import { SITE_URL } from "@/lib/site";
 // et jamais une bulle visible qui répondrait 503 au premier message.
 const chatEnabled = getChatConfig() !== null;
 
-// Corps de texte : un serif de texte sous des titres serif — parti pris
-// éditorial assumé, choisi sur maquette comparative. Une seule variable CSS
-// (`--font-body`) : changer de police se fait ici, et nulle part ailleurs.
-const body = Newsreader({
+const sans = Geist({
   subsets: ["latin"],
-  variable: "--font-body",
+  variable: "--font-geist-sans",
   display: "swap",
 });
 
@@ -69,14 +66,14 @@ export default function RootLayout({
     <html
       lang="fr"
       suppressHydrationWarning
-      className={`${body.variable} ${mono.variable} ${display.variable}`}
+      className={`${sans.variable} ${mono.variable} ${display.variable}`}
     >
       <body id="top" className="bg-background text-foreground antialiased">
         <ThemeScript />
         <ThemeProvider>
           <a
             href="#main"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:border focus:border-border focus:bg-background focus:px-4 focus:py-2 focus:text-small focus:text-foreground focus:shadow-lg"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:border focus:border-border focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground focus:shadow-lg"
           >
             Aller au contenu
           </a>

@@ -16,9 +16,9 @@ export const metadata: Metadata = {
 };
 
 const motivations = [
-  "Produits utiles",
-  "Équipes soudées",
-  "Apprentissage continu",
+  "Expérience utilisateur fluide",
+  "Produit final utilisable et potable",
+  "Apprentissage continu en équipe et dans un environnement sain",
 ];
 
 // Source unique : les mêmes listes alimentent /cv et la base du chat.
@@ -36,10 +36,10 @@ function Pillar({
     <div className="border-t border-border pt-8">
       {/* h2 et non h3 : ces piliers suivent directement le h1 de la page, un
           h3 créerait un saut de niveau dans la navigation au lecteur d'écran. */}
-      <h2 className="font-mono text-label uppercase tracking-[0.18em] text-foreground">
+      <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-foreground">
         {heading}
       </h2>
-      <ul className="mt-6 space-y-2 font-display text-sub leading-snug tracking-tight">
+      <ul className="mt-6 space-y-2 font-display text-xl leading-snug tracking-tight">
         {items.map((t) => (
           <li key={t}>{t}</li>
         ))}
@@ -64,24 +64,32 @@ export default function AProposPage() {
         <div className="mt-20 grid gap-12 lg:grid-cols-[5fr_7fr] lg:gap-16">
           <Reveal delay={120}>
             <div className="lg:sticky lg:top-24">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-border bg-surface">
+              {/* Le cadre reprend le rapport d'affichage réel de la photo.
+                  ⚠️ Le fichier fait 6000×4000 sur le disque, mais il porte une
+                  orientation EXIF 8 : le navigateur le pivote, donc il s'affiche
+                  en 4000×6000, soit 2/3. À ce rapport, `object-cover` n'a plus
+                  rien à rogner et la photo apparaît entière, à sa taille.
+                  Pas de `parallax-slow` ici : cet effet a besoin d'un
+                  `scale(1.14)` pour avoir de la marge de déplacement, donc il
+                  rezoome par construction. */}
+              <div className="relative aspect-[2/3] overflow-hidden rounded-2xl border border-border bg-surface">
                 <Image
                   src="/portrait-premicia.jpg"
                   alt="Portrait de Prémicia MENSAH"
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"
-                  className="parallax-slow object-cover"
+                  className="object-cover"
                   priority
                 />
               </div>
-              <p className="mt-5 font-mono text-label uppercase tracking-[0.18em] text-foreground">
+              <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.2em] text-foreground">
                 Prémicia S. E. Mensah / Cotonou, Bénin
               </p>
             </div>
           </Reveal>
 
           <Reveal delay={200}>
-            <div className="space-y-7 font-display text-sub leading-[1.45] tracking-tight">
+            <div className="space-y-7 font-display text-[clamp(1.25rem,1.5vw,1.5rem)] leading-[1.45] tracking-tight">
               <p>
                 Je suis une développeuse full-stack béninoise. J&apos;aime
                 construire des produits numériques utiles, du prototypage

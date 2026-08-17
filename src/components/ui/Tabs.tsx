@@ -86,7 +86,7 @@ export function Tabs({ items, label }: { items: TabItem[]; label: string }) {
               tabIndex={selected ? 0 : -1}
               onClick={() => select(item.id)}
               className={cn(
-                "-mb-px inline-flex items-baseline gap-2 border-b-2 pb-4 pt-4 font-mono text-label uppercase tracking-[0.18em] transition-colors duration-300 ease-[var(--ease-out-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent",
+                "-mb-px inline-flex items-baseline gap-2 border-b-2 pb-4 pt-4 font-mono text-xs uppercase tracking-[0.2em] transition-colors duration-300 ease-[var(--ease-out-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent",
                 selected
                   ? "border-accent text-accent"
                   : "border-transparent text-foreground hover:border-border hover:text-accent",
@@ -94,7 +94,7 @@ export function Tabs({ items, label }: { items: TabItem[]; label: string }) {
             >
               {item.label}
               {item.count !== undefined ? (
-                <span className="text-label">
+                <span className="text-[10px]">
                   {String(item.count).padStart(2, "0")}
                 </span>
               ) : null}

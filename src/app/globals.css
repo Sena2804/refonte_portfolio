@@ -44,26 +44,7 @@
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-ok: var(--ok);
-  /* Échelle de texte unique pour tout le site. Quatre tailles, pas une de plus :
-     au-delà, plus rien ne se ressemble d'une page à l'autre. Les titres, eux,
-     passent par les variantes de `Heading` (police display). */
-  --text-label: 0.6875rem; /* 11px — étiquettes mono, tags, dates */
-  --text-small: 0.875rem; /* 14px — secondaire */
-  --text-body: 0.9375rem; /* 15px — texte courant */
-  --text-lead: 1rem; /* 16px — chapeau d'introduction */
-
-  /* Titres (police display). Cinq échelons, rapport ~1,25 de l'un à l'autre.
-     `Heading` les expose sous forme de variantes ; les rares titres qui ne
-     peuvent pas passer par le composant réutilisent ces mêmes tailles. */
-  --text-display: clamp(2.5rem, 6vw, 4.5rem); /* hero, appel de contact */
-  --text-title: clamp(2rem, 4.5vw, 3rem); /* titre de page */
-  --text-section: clamp(1.5rem, 2.6vw, 2rem); /* partie de page */
-  --text-item: clamp(1.25rem, 2vw, 1.5rem); /* entrée de liste */
-  --text-sub: clamp(1.0625rem, 1.4vw, 1.1875rem); /* titre dense */
-
-  /* Nom imposé par Tailwind (c'est ce token qui alimente la police par défaut
-     du preflight) — mais le corps de texte est bien un serif. */
-  --font-sans: var(--font-body), Georgia, serif;
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-display: var(--font-fraunces), Georgia, serif;
 
@@ -80,7 +61,26 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-body), Georgia, serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+}
+
+/* Curseur des éléments cliquables.
+   Depuis Tailwind v4, le preflight ne force plus `cursor: pointer` sur les
+   boutons : ils héritent du curseur par défaut du navigateur, une flèche. On le
+   remet ici plutôt que classe par classe, sinon le prochain bouton ajouté
+   quelque part repartira sans. Les `a[href]` l'ont déjà nativement, on les
+   nomme quand même pour que la règle documente l'intention complète. */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+a[href],
+summary {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
 }
 
 ::selection {
@@ -300,11 +300,11 @@ body {
   font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
 }
 
-/* Titre du hero : axe optique plus lisible, terminaisons adoucies.
-   (Les `font-feature-settings` ss01/cv11 du corps, propres à Geist, ont été
-   retirés avec le passage à Instrument Sans — ce sont eux qui dégradaient le
-   dessin des lettres en Fraunces.) */
+/* Titre du hero : on coupe les feature-settings hérités du corps (ss01/cv11,
+   pensés pour Geist) qui dégradaient le dessin des lettres en Fraunces, et on
+   choisit un axe optique plus lisible avec des terminaisons adoucies. */
 .hero-title {
+  font-feature-settings: normal;
   font-variation-settings: "opsz" 78, "SOFT" 40, "WONK" 0;
 }
 

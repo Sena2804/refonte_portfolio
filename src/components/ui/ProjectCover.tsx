@@ -92,10 +92,10 @@ export function ProjectCover({
           <span className="absolute -right-1 -top-7 font-display text-[6.5rem] leading-none text-accent/10">
             {short}
           </span>
-          <span className="absolute left-4 top-3 font-mono text-label uppercase tracking-[0.18em] text-foreground">
+          <span className="absolute left-4 top-3 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground">
             {project.year}
           </span>
-          <span className="absolute bottom-3 left-4 right-4 font-display text-sub leading-tight tracking-tight text-foreground">
+          <span className="absolute bottom-3 left-4 right-4 font-display text-xl leading-tight tracking-tight text-foreground">
             {project.title}
           </span>
         </>

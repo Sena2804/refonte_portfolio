@@ -95,7 +95,7 @@ function TimelineEntry({
             décalage en dur — donc alignée quelle que soit la hauteur du bloc. */}
         <SectionLabel
           number={String(index + 1).padStart(2, "0")}
-          className="relative tracking-[0.18em]"
+          className="relative tracking-[0.2em]"
         >
           <span
             aria-hidden
@@ -103,10 +103,10 @@ function TimelineEntry({
           />
           {item.period}
         </SectionLabel>
-        <h2 className="mt-4 font-display text-item leading-snug tracking-tight">
+        <h2 className="mt-4 font-display text-[clamp(1.5rem,2.5vw,2rem)] leading-snug tracking-tight">
           {item.title}
         </h2>
-        <p className="mt-4 max-w-prose text-body leading-relaxed text-foreground">
+        <p className="mt-4 max-w-prose text-[15px] leading-relaxed text-foreground">
           {item.detail}
         </p>
         {item.tags && item.tags.length > 0 ? (
@@ -160,7 +160,7 @@ export default function ParcoursPage() {
           </Heading>
         </Reveal>
         <Reveal delay={160}>
-          <p className="mt-6 max-w-xl text-lead leading-relaxed text-foreground">
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-foreground">
             Forte de mes bases en informatique industrielle et maintenance, j&apos;ai décidé de me réorienter
             vers le développement web full-stack et mobile pour mieux exprimer ma créativité et mon intérêt 
             pour les technologies modernes. Mon parcours atypique m&apos;a permis d&apos;acquérir une solide
