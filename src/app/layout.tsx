@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Fraunces } from "next/font/google";
+import { Newsreader, Geist_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -14,9 +14,12 @@ import { SITE_URL } from "@/lib/site";
 // et jamais une bulle visible qui répondrait 503 au premier message.
 const chatEnabled = getChatConfig() !== null;
 
-const sans = Geist({
+// Corps de texte : un serif de texte sous des titres serif — parti pris
+// éditorial assumé, choisi sur maquette comparative. Une seule variable CSS
+// (`--font-body`) : changer de police se fait ici, et nulle part ailleurs.
+const body = Newsreader({
   subsets: ["latin"],
-  variable: "--font-geist-sans",
+  variable: "--font-body",
   display: "swap",
 });
 
@@ -52,8 +55,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#F7F7F4" },
-    { media: "(prefers-color-scheme: dark)", color: "#0B0F1F" },
+    { media: "(prefers-color-scheme: light)", color: "#FFFFFF" },
+    { media: "(prefers-color-scheme: dark)", color: "#08090B" },
   ],
 };
 
@@ -66,14 +69,14 @@ export default function RootLayout({
     <html
       lang="fr"
       suppressHydrationWarning
-      className={`${sans.variable} ${mono.variable} ${display.variable}`}
+      className={`${body.variable} ${mono.variable} ${display.variable}`}
     >
       <body id="top" className="bg-background text-foreground antialiased">
         <ThemeScript />
         <ThemeProvider>
           <a
             href="#main"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:border focus:border-border focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground focus:shadow-lg"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:border focus:border-border focus:bg-background focus:px-4 focus:py-2 focus:text-small focus:text-foreground focus:shadow-lg"
           >
             Aller au contenu
           </a>

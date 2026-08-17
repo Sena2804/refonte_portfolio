@@ -9,8 +9,8 @@ type Variant = "primary" | "ghost" | "link";
 type Size = "md" | "lg";
 
 const sizes: Record<Size, string> = {
-  md: "h-10 px-5 text-sm",
-  lg: "h-12 px-7 text-[15px]",
+  md: "h-10 px-5 text-small",
+  lg: "h-12 px-7 text-body",
 };
 
 const variants: Record<Variant, string> = {

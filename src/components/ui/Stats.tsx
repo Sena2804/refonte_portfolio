@@ -45,14 +45,14 @@ export function Stats({
           key={stat.label}
           className="flex flex-col gap-3 bg-background p-8 lg:p-10"
         >
-          <dd className="font-display text-[clamp(2.5rem,6vw,4rem)] leading-none tracking-tight">
+          <dd className="font-display text-title leading-none tracking-tight">
             {stat.value !== undefined ? (
               <StatNumber stat={stat} />
             ) : (
               <span>{stat.text}</span>
             )}
           </dd>
-          <dt className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+          <dt className="font-mono text-label uppercase tracking-[0.18em] text-foreground">
             {stat.label}
           </dt>
         </div>

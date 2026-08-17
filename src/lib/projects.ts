@@ -36,6 +36,8 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: "my-show-time",
+    // TODO: image de test (placeholder) — à remplacer par une vraie capture.
+    cover: "/projets/my-show-time.jpg",
     number: "0001",
     title: "My Show Time",
     year: "2025",
@@ -90,6 +92,8 @@ export const projects: Project[] = [
   },
   {
     slug: "calculatrice-scientifique",
+    // TODO: image de test (placeholder) — à remplacer par une vraie capture.
+    cover: "/projets/calculatrice-scientifique.jpg",
     number: "0002",
     title: "Calculatrice scientifique",
     year: "2025",
@@ -139,6 +143,8 @@ export const projects: Project[] = [
   },
   {
     slug: "yowl",
+    // TODO: image de test (placeholder) — à remplacer par une vraie capture.
+    cover: "/projets/yowl.jpg",
     number: "0003",
     title: "Yowl",
     year: "2025",
@@ -193,6 +199,8 @@ export const projects: Project[] = [
   },
   {
     slug: "logiquali",
+    // TODO: image de test (placeholder) — à remplacer par une vraie capture.
+    cover: "/projets/logiquali.jpg",
     number: "0004",
     title: "LogiQuali",
     year: "2025",
@@ -257,6 +265,8 @@ export const projects: Project[] = [
   },
   {
     slug: "my-rotten-tomatoes",
+    // TODO: image de test (placeholder) — à remplacer par une vraie capture.
+    cover: "/projets/my-rotten-tomatoes.jpg",
     number: "0005",
     title: "My Rotten Tomatoes",
     year: "2025",
@@ -307,6 +317,8 @@ export const projects: Project[] = [
   },
   {
     slug: "audify",
+    // TODO: image de test (placeholder) — à remplacer par une vraie capture.
+    cover: "/projets/audify.jpg",
     number: "0006",
     title: "Audify",
     year: "2025",
@@ -350,6 +362,8 @@ export const projects: Project[] = [
   },
   {
     slug: "racines-virtuelles",
+    // TODO: image de test (placeholder) — à remplacer par une vraie capture.
+    cover: "/projets/racines-virtuelles.jpg",
     number: "0007",
     title: "Racines Virtuelles",
     year: "2025",
@@ -393,6 +407,8 @@ export const projects: Project[] = [
   },
   {
     slug: "trelltech",
+    // TODO: image de test (placeholder) — à remplacer par une vraie capture.
+    cover: "/projets/trelltech.jpg",
     number: "0008",
     title: "Trelltech",
     year: "2025",
@@ -443,6 +459,8 @@ export const projects: Project[] = [
   },
   {
     slug: "shop-verse",
+    // TODO: image de test (placeholder) — à remplacer par une vraie capture.
+    cover: "/projets/shop-verse.jpg",
     number: "0009",
     title: "Shop Verse",
     year: "2025",

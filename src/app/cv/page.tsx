@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { Download } from "lucide-react";
 import {
   ButtonLink,
@@ -68,6 +69,16 @@ const projets = [
   },
 ];
 
+/** Titre de partie : c'est l'échelle et l'espace qui le détachent, pas un
+ *  filet. Un CV plein de traits horizontaux fait formulaire, pas portfolio. */
+function PartTitle({ children }: { children: ReactNode }) {
+  return (
+    <h2 className="font-display text-item leading-tight tracking-tight">
+      {children}
+    </h2>
+  );
+}
+
 function HistoryBlock({
   heading,
   entries,
@@ -77,23 +88,23 @@ function HistoryBlock({
 }) {
   return (
     <section>
-      <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
-        {heading}
-      </h2>
-      <ol className="mt-8 divide-y divide-border border-y border-border">
+      <PartTitle>{heading}</PartTitle>
+      <ol className="mt-8 space-y-8">
         {entries.map((e) => (
           <li
             key={`${e.period}-${e.title}`}
-            className="grid gap-2 py-6 sm:grid-cols-[100px_1fr] sm:gap-10"
+            className="grid gap-1 sm:grid-cols-[104px_1fr] sm:gap-8"
           >
-            <span className="font-mono text-xs uppercase tracking-[0.16em] text-muted">
+            <span className="font-mono text-label uppercase tracking-[0.18em] tabular-nums text-foreground">
               {e.period}
             </span>
             <div>
-              <h3 className="font-display text-lg leading-snug tracking-tight">
+              <h3 className="font-display text-sub leading-snug tracking-tight">
                 {e.title}
               </h3>
-              <p className="mt-1 text-sm text-muted">{e.detail}</p>
+              <p className="mt-1.5 text-body leading-relaxed text-foreground">
+                {e.detail}
+              </p>
             </div>
           </li>
         ))}
@@ -131,38 +142,40 @@ export default function CVPage() {
 
         <div className="mt-20 grid gap-16 lg:grid-cols-[3fr_5fr] lg:gap-20">
           <Reveal>
-            <aside className="space-y-12 lg:sticky lg:top-24">
-              <div>
-                <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
-                  Identité
-                </h2>
-                <div className="mt-5 space-y-1 font-display text-[clamp(1.25rem,1.8vw,1.5rem)] leading-tight tracking-tight">
+            {/* Pas de `sticky` ici : la colonne est plus haute que l'écran, et
+                un bloc collant plus grand que la fenêtre rend sa propre fin
+                inatteignable au scroll. */}
+            <aside className="space-y-20">
+              <section>
+                <PartTitle>Identité</PartTitle>
+                <div className="mt-6 space-y-1 text-body leading-relaxed text-foreground">
                   <p>Prémicia S. E. Mensah</p>
-                  <p className="text-muted">Développeuse full-stack</p>
-                  <p className="text-muted">Cotonou, Bénin</p>
+                  <p>Développeuse full-stack</p>
+                  <p>Cotonou, Bénin</p>
                 </div>
-              </div>
+              </section>
 
-              <div>
-                <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
-                  Compétences techniques
-                </h2>
-                <div className="mt-6 space-y-8">
+              <section>
+                <PartTitle>Compétences techniques</PartTitle>
+                {/* Trois niveaux, trois échelles : partie en display 22px,
+                    niveau d'usage en display 17px, domaine en petit mono.
+                    Empilés dans la même mono, ils devenaient indiscernables. */}
+                <div className="mt-8 space-y-10">
                   {competences.map((niveau) => (
                     <section key={niveau.level}>
-                      <h3 className="font-mono text-[11px] uppercase tracking-[0.16em] text-foreground">
+                      <h3 className="font-display text-sub leading-snug tracking-tight">
                         {niveau.label}
                       </h3>
-                      <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
+                      <p className="mt-1.5 text-small leading-relaxed text-foreground">
                         {niveau.note}
                       </p>
-                      <dl className="mt-4 space-y-4">
+                      <dl className="mt-5 space-y-5">
                         {niveau.groups.map((g) => (
                           <div key={g.domain}>
-                            <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+                            <dt className="font-mono text-label uppercase tracking-[0.18em] text-foreground">
                               {g.domain}
                             </dt>
-                            <dd className="mt-2 flex flex-wrap gap-2">
+                            <dd className="mt-2.5 flex flex-wrap gap-2">
                               {g.items.map((i) => (
                                 <Tag key={i}>{i}</Tag>
                               ))}
@@ -172,24 +185,22 @@ export default function CVPage() {
                       </dl>
                     </section>
                   ))}
-
-                  <section>
-                    <h3 className="font-mono text-[11px] uppercase tracking-[0.16em] text-foreground">
-                      Outils
-                    </h3>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {TOOLS.map((t) => (
-                        <Tag key={t}>{t}</Tag>
-                      ))}
-                    </div>
-                  </section>
                 </div>
-              </div>
+              </section>
+
+              <section>
+                <PartTitle>Outils</PartTitle>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {TOOLS.map((t) => (
+                    <Tag key={t}>{t}</Tag>
+                  ))}
+                </div>
+              </section>
             </aside>
           </Reveal>
 
           <Reveal delay={100}>
-            <div className="space-y-16">
+            <div className="space-y-20">
               <HistoryBlock heading="Stages en entreprise" entries={stages} />
               <HistoryBlock heading="Projets" entries={projets} />
               <HistoryBlock heading="Formations" entries={formations} />

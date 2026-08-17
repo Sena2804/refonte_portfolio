@@ -10,13 +10,13 @@ export default function ProjectNotFound() {
         <Heading variant="page" className="mt-4 max-w-[18ch]">
           Ce projet n&apos;existe pas.
         </Heading>
-        <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+        <p className="mt-6 max-w-xl text-lead leading-relaxed text-foreground">
           Il a peut-être été renommé ou archivé. Tu peux revenir à la liste
           complète des projets.
         </p>
         <NextLink
           href="/projets"
-          className="group mt-12 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-muted transition-colors duration-200 hover:text-foreground"
+          className="group mt-12 inline-flex items-center gap-2 font-mono text-label uppercase tracking-[0.18em] text-foreground transition-colors duration-200 hover:text-accent"
         >
           <ArrowLeft
             className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-x-1"

@@ -36,10 +36,10 @@ function Pillar({
     <div className="border-t border-border pt-8">
       {/* h2 et non h3 : ces piliers suivent directement le h1 de la page, un
           h3 créerait un saut de niveau dans la navigation au lecteur d'écran. */}
-      <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+      <h2 className="font-mono text-label uppercase tracking-[0.18em] text-foreground">
         {heading}
       </h2>
-      <ul className="mt-6 space-y-2 font-display text-xl leading-snug tracking-tight">
+      <ul className="mt-6 space-y-2 font-display text-sub leading-snug tracking-tight">
         {items.map((t) => (
           <li key={t}>{t}</li>
         ))}
@@ -74,14 +74,14 @@ export default function AProposPage() {
                   priority
                 />
               </div>
-              <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+              <p className="mt-5 font-mono text-label uppercase tracking-[0.18em] text-foreground">
                 Prémicia S. E. Mensah / Cotonou, Bénin
               </p>
             </div>
           </Reveal>
 
           <Reveal delay={200}>
-            <div className="space-y-7 font-display text-[clamp(1.25rem,1.5vw,1.5rem)] leading-[1.45] tracking-tight">
+            <div className="space-y-7 font-display text-sub leading-[1.45] tracking-tight">
               <p>
                 Je suis une développeuse full-stack béninoise. J&apos;aime
                 construire des produits numériques utiles, du prototypage
@@ -91,7 +91,7 @@ export default function AProposPage() {
                 Mon objectif est de contribuer à des projets à fort impact,
                 avec une exécution rigoureuse et un vrai sens du produit.
               </p>
-              <p className="text-muted">
+              <p className="text-foreground">
                 Je combine des compétences front-end et back-end, avec une
                 forte capacité d&apos;apprentissage et un vrai plaisir à
                 travailler en équipe. Je veille autant à la qualité du code

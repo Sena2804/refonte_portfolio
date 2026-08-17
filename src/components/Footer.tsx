@@ -15,10 +15,10 @@ export default function Footer() {
       <div className="mx-auto max-w-[1200px] px-[clamp(1rem,4vw,2.5rem)] py-14">
         <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="font-display text-[clamp(1.75rem,3vw,2.25rem)] leading-tight tracking-tight">
+            <p className="font-display text-section leading-tight tracking-tight">
               Prémicia S. E. Mensah
             </p>
-            <p className="mt-3 font-mono text-xs uppercase tracking-[0.2em] text-muted">
+            <p className="mt-3 font-mono text-label uppercase tracking-[0.18em] text-foreground">
               Développeuse full-stack / Cotonou
             </p>
           </div>
@@ -28,13 +28,13 @@ export default function Footer() {
               compense pour que l'alignement visuel ne bouge pas. */}
           <nav
             aria-label="Pied de page"
-            className="-my-1 flex flex-wrap gap-x-8 gap-y-1 text-sm"
+            className="-my-1 flex flex-wrap gap-x-8 gap-y-1 text-small"
           >
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="inline-flex items-center py-1 text-muted transition-colors duration-200 hover:text-foreground"
+                className="inline-flex items-center py-1 text-foreground transition-colors duration-200 hover:text-accent"
               >
                 {link.label}
               </Link>
@@ -42,7 +42,7 @@ export default function Footer() {
           </nav>
         </div>
 
-        <div className="mt-12 flex flex-col-reverse gap-4 border-t border-border pt-6 font-mono text-[11px] uppercase tracking-[0.2em] text-muted md:flex-row md:items-center md:justify-between">
+        <div className="mt-12 flex flex-col-reverse gap-4 border-t border-border pt-6 font-mono text-label uppercase tracking-[0.18em] text-foreground md:flex-row md:items-center md:justify-between">
           <p>© {year} — Tous droits réservés</p>
           <a
             href="#top"

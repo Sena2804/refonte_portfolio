@@ -56,7 +56,7 @@ export default function Navbar() {
       <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-[clamp(1rem,4vw,2.5rem)]">
         <Link
           href="/"
-          className="inline-flex items-center py-2 font-mono text-[13px] uppercase tracking-[0.18em] text-foreground"
+          className="inline-flex items-center py-2 font-mono text-label uppercase tracking-[0.18em] text-foreground"
         >
           Prémicia<span className="text-accent">.</span>dev
         </Link>
@@ -74,17 +74,17 @@ export default function Navbar() {
                 href={link.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "relative px-4 py-2 text-sm transition-colors duration-200",
+                  "relative px-4 py-2 text-small transition-colors duration-200",
                   active
-                    ? "text-foreground"
-                    : "text-muted hover:text-foreground",
+                    ? "text-accent"
+                    : "text-foreground hover:text-accent",
                 )}
               >
                 {link.label}
                 {active ? (
                   <span
                     aria-hidden
-                    className="absolute inset-x-4 -bottom-px h-px bg-foreground"
+                    className="absolute inset-x-4 -bottom-px h-px bg-accent"
                   />
                 ) : null}
               </Link>
@@ -130,8 +130,8 @@ export default function Navbar() {
                   onClick={() => setOpen(false)}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "border-b border-border py-4 font-display text-2xl leading-tight last:border-b-0",
-                    active ? "text-foreground" : "text-muted",
+                    "border-b border-border py-4 font-display text-item leading-tight last:border-b-0",
+                    active ? "text-accent" : "text-foreground",
                   )}
                 >
                   {link.label}

@@ -5,6 +5,7 @@ import { ArrowUpRight, ArrowLeft } from "lucide-react";
 import {
   Heading,
   Page,
+  ProjectCover,
   ReadingProgress,
   Reveal,
   Section,
@@ -85,10 +86,10 @@ function SectionCard({
             className="absolute left-0 top-0 h-px w-0 bg-accent transition-[width] duration-500 ease-[var(--ease-out-soft)] group-hover/card:w-full"
           />
         ) : null}
-        <h3 className="font-display text-[clamp(1.25rem,2vw,1.5rem)] leading-tight tracking-tight">
+        <h3 className="font-display text-sub leading-tight tracking-tight">
           {item.title}
         </h3>
-        <p className="mt-4 max-w-prose text-[15px] leading-relaxed text-muted">
+        <p className="mt-4 max-w-prose text-body leading-relaxed text-foreground">
           {item.body}
         </p>
       </article>
@@ -125,7 +126,7 @@ export default async function ProjectDetailPage({
         <Reveal>
           <NextLink
             href="/projets"
-            className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-muted transition-colors duration-200 hover:text-foreground"
+            className="group inline-flex items-center gap-2 font-mono text-label uppercase tracking-[0.18em] text-foreground transition-colors duration-200 hover:text-accent"
           >
             <ArrowLeft
               className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-x-1"
@@ -148,7 +149,7 @@ export default async function ProjectDetailPage({
         </Reveal>
 
         <Reveal delay={200}>
-          <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted">
+          <p className="mt-8 max-w-2xl text-lead leading-relaxed text-foreground">
             {project.description}
           </p>
         </Reveal>
@@ -161,29 +162,43 @@ export default async function ProjectDetailPage({
           </div>
         </Reveal>
 
+        <Reveal delay={300}>
+          {/* Couverture pleine largeur : le conteneur découpe, l'image déborde
+              légèrement et dérive au scroll (parallax natif, zéro JS). */}
+          <ProjectCover
+            project={project}
+            ratio="16/9"
+            priority
+            sizes="(min-width: 1200px) 1136px, 100vw"
+            alt={`Aperçu du projet ${project.title}`}
+            className="mt-16"
+            imageClassName="parallax-slow"
+          />
+        </Reveal>
+
         <Reveal delay={320}>
           <dl className="mt-16 grid grid-cols-1 gap-8 border-y border-border py-10 sm:grid-cols-3">
             <div>
-              <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+              <dt className="font-mono text-label uppercase tracking-[0.18em] text-foreground">
                 Rôle
               </dt>
-              <dd className="mt-3 text-[15px] leading-relaxed">
+              <dd className="mt-3 text-body leading-relaxed">
                 {project.role}
               </dd>
             </div>
             <div>
-              <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+              <dt className="font-mono text-label uppercase tracking-[0.18em] text-foreground">
                 Équipe
               </dt>
-              <dd className="mt-3 text-[15px] leading-relaxed">
+              <dd className="mt-3 text-body leading-relaxed">
                 {project.team}
               </dd>
             </div>
             <div>
-              <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+              <dt className="font-mono text-label uppercase tracking-[0.18em] text-foreground">
                 Statut
               </dt>
-              <dd className="mt-3 text-[15px] leading-relaxed">
+              <dd className="mt-3 text-body leading-relaxed">
                 {project.status}
               </dd>
             </div>
@@ -192,7 +207,7 @@ export default async function ProjectDetailPage({
 
         <div className="mt-24 space-y-24">
           <TwoCol label="Contexte">
-            <p className="max-w-prose text-[17px] leading-relaxed">
+            <p className="max-w-prose text-body leading-relaxed">
               {project.context}
             </p>
           </TwoCol>
@@ -204,10 +219,10 @@ export default async function ProjectDetailPage({
                   key={f}
                   className="group/feat flex items-baseline gap-4 border-b border-border pb-4 last:border-b-0 last:pb-0"
                 >
-                  <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted transition-colors duration-300 group-hover/feat:text-accent">
+                  <span className="font-mono text-label uppercase tracking-[0.18em] text-foreground transition-colors duration-300 group-hover/feat:text-accent">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="text-[16px] leading-relaxed">{f}</span>
+                  <span className="text-body leading-relaxed">{f}</span>
                 </li>
               ))}
             </ul>
@@ -234,7 +249,7 @@ export default async function ProjectDetailPage({
               {project.outcomes.map((o) => (
                 <li
                   key={o}
-                  className="flex items-baseline gap-4 text-[16px] leading-relaxed"
+                  className="flex items-baseline gap-4 text-body leading-relaxed"
                 >
                   <span
                     aria-hidden
@@ -260,10 +275,10 @@ export default async function ProjectDetailPage({
                     }
                     className="group flex flex-wrap items-baseline justify-between gap-4 py-6 transition-colors duration-200 hover:text-accent"
                   >
-                    <span className="font-display text-[clamp(1.25rem,2.5vw,1.75rem)] leading-tight tracking-tight">
+                    <span className="font-display text-item leading-tight tracking-tight">
                       {link.label}
                     </span>
-                    <span className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-muted transition-colors duration-300 group-hover:text-foreground">
+                    <span className="inline-flex items-center gap-2 font-mono text-label uppercase tracking-[0.18em] text-foreground transition-colors duration-300 group-hover:text-accent">
                       {LINK_KIND_LABEL[link.kind] ?? link.kind}
                       <ArrowUpRight
                         className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
@@ -283,10 +298,10 @@ export default async function ProjectDetailPage({
               href={`/projets/${previous.slug}`}
               className="group block"
             >
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+              <span className="font-mono text-label uppercase tracking-[0.18em] text-foreground">
                 ← Précédent
               </span>
-              <span className="mt-3 block font-display text-[clamp(1.25rem,2.5vw,1.75rem)] leading-tight tracking-tight transition-colors duration-300 group-hover:text-accent">
+              <span className="mt-3 block font-display text-item leading-tight tracking-tight transition-colors duration-300 group-hover:text-accent">
                 {previous.title}
               </span>
             </NextLink>
@@ -296,10 +311,10 @@ export default async function ProjectDetailPage({
               href={`/projets/${next.slug}`}
               className="group block text-right"
             >
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+              <span className="font-mono text-label uppercase tracking-[0.18em] text-foreground">
                 Suivant →
               </span>
-              <span className="mt-3 block font-display text-[clamp(1.25rem,2.5vw,1.75rem)] leading-tight tracking-tight transition-colors duration-300 group-hover:text-accent">
+              <span className="mt-3 block font-display text-item leading-tight tracking-tight transition-colors duration-300 group-hover:text-accent">
                 {next.title}
               </span>
             </NextLink>

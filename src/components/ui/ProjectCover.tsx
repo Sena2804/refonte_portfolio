@@ -15,6 +15,14 @@ function hashString(value: string) {
   return h;
 }
 
+/** Formats disponibles. Le ratio est fixé ici (et pas via `className`) parce que
+ *  `cn` concatène sans arbitrer : deux `aspect-*` sur le même élément se
+ *  marcheraient dessus selon l'ordre de génération de Tailwind. */
+const RATIOS = {
+  "4/3": "aspect-[4/3]",
+  "16/9": "aspect-[16/9]",
+} as const;
+
 /**
  * Couverture de projet. Si `cover` (capture) est fourni, on l'affiche ; sinon on
  * génère une composition abstraite déterministe dérivée du slug, dans la palette
@@ -23,9 +31,24 @@ function hashString(value: string) {
 export function ProjectCover({
   project,
   className,
+  imageClassName,
+  sizes = "256px",
+  ratio = "4/3",
+  priority = false,
+  alt = "",
 }: {
   project: CoverData;
   className?: string;
+  /** Classes portées par l'image elle-même (zoom, parallax…). */
+  imageClassName?: string;
+  /** Largeurs candidates transmises à next/image (le cover n'est pas toujours
+   *  une vignette : la fiche projet l'affiche pleine largeur). */
+  sizes?: string;
+  ratio?: keyof typeof RATIOS;
+  priority?: boolean;
+  /** Vide par défaut : à côté du titre du projet, la vignette est décorative.
+   *  À renseigner quand l'image porte l'information (grande couverture). */
+  alt?: string;
 }) {
   const h = hashString(project.slug);
   const angle = 90 + (h % 8) * 22.5;
@@ -36,17 +59,19 @@ export function ProjectCover({
   return (
     <div
       className={cn(
-        "relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-border bg-surface",
+        "relative w-full overflow-hidden rounded-xl border border-border bg-surface",
+        RATIOS[ratio],
         className,
       )}
     >
       {project.cover ? (
         <Image
           src={project.cover}
-          alt=""
+          alt={alt}
           fill
-          sizes="256px"
-          className="object-cover"
+          priority={priority}
+          sizes={sizes}
+          className={cn("object-cover", imageClassName)}
         />
       ) : (
         <>
@@ -67,10 +92,10 @@ export function ProjectCover({
           <span className="absolute -right-1 -top-7 font-display text-[6.5rem] leading-none text-accent/10">
             {short}
           </span>
-          <span className="absolute left-4 top-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
+          <span className="absolute left-4 top-3 font-mono text-label uppercase tracking-[0.18em] text-foreground">
             {project.year}
           </span>
-          <span className="absolute bottom-3 left-4 right-4 font-display text-xl leading-tight tracking-tight text-foreground">
+          <span className="absolute bottom-3 left-4 right-4 font-display text-sub leading-tight tracking-tight text-foreground">
             {project.title}
           </span>
         </>

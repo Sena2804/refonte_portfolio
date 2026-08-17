@@ -19,15 +19,17 @@ export function SectionLabel({ number, children, className, as = "p" }: Props) {
     as,
     {
       className: cn(
-        "font-mono text-[11px] uppercase tracking-[0.18em] text-muted",
+        "font-mono text-label uppercase tracking-[0.18em] text-foreground",
         className,
       ),
     },
     <>
       {number ? (
         <>
-          <span className="text-foreground">{number}</span>
-          <span aria-hidden className="mx-2 opacity-60">
+          {/* Le numéro est le seul endroit où l'encre apparaît par défaut :
+              une touche de couleur par section, jamais sur le texte courant. */}
+          <span className="text-accent">{number}</span>
+          <span aria-hidden className="mx-2">
             —
           </span>
         </>

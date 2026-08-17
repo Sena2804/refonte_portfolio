@@ -20,15 +20,15 @@ const WEEKDAYS = ["L", "M", "M", "J", "V", "S", "D"];
 const STATUS_DOT: Record<AvailabilityStatus, string> = {
   open: "bg-ok",
   limited: "bg-accent",
-  closed: "bg-muted",
+  closed: "bg-faint",
 };
 
 // Une seule classe de couleur par état : pas de conflit possible entre règles
 // (`cn` concatène sans arbitrer, contrairement à tailwind-merge).
 const DAY_STYLES: Record<DayState, string> = {
   free: "bg-accent-soft text-accent",
-  busy: "text-muted/40 line-through decoration-muted/60",
-  idle: "text-muted/40",
+  busy: "text-faint line-through decoration-faint",
+  idle: "text-faint",
 };
 
 type Day = { n: number; key: string; weekend: boolean; today: boolean } | null;
@@ -105,22 +105,22 @@ export function AvailabilityCalendar({
             )}
           />
         </span>
-        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-foreground">
+        <span className="font-mono text-label uppercase tracking-[0.18em] text-foreground">
           {STATUS_LABELS[availability.status]}
         </span>
       </p>
 
       <div className="mt-5 flex items-center justify-between gap-3">
-        <span className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+        <span className="inline-flex items-center gap-1.5 font-mono text-label uppercase tracking-[0.18em] text-foreground">
           <MapPin className="h-3.5 w-3.5" strokeWidth={1.75} />
           {SITE_LOCATION.city} — {SITE_LOCATION.country}
         </span>
-        <span className="font-mono text-[11px] tabular-nums tracking-[0.1em] text-muted">
+        <span className="font-mono text-label tabular-nums tracking-[0.1em] text-foreground">
           {time ?? "—:—"}
         </span>
       </div>
 
-      <p className="mt-4 font-display text-xl capitalize leading-none tracking-tight">
+      <p className="mt-4 font-display text-sub capitalize leading-none tracking-tight">
         {calendar?.label ?? " "}
       </p>
 
@@ -128,7 +128,7 @@ export function AvailabilityCalendar({
         {WEEKDAYS.map((d, i) => (
           <span
             key={`h-${i}`}
-            className="pb-1 text-center font-mono text-[10px] uppercase text-muted/70"
+            className="pb-1 text-center font-mono text-label uppercase text-faint"
           >
             {d}
           </span>
@@ -142,7 +142,7 @@ export function AvailabilityCalendar({
               aria-current={day.today ? "date" : undefined}
               title={state === "busy" ? "Indisponible" : undefined}
               className={cn(
-                "flex aspect-square items-center justify-center rounded-lg font-mono text-xs tabular-nums",
+                "flex aspect-square items-center justify-center rounded-lg font-mono text-label tabular-nums",
                 DAY_STYLES[state],
                 day.today &&
                   "font-semibold text-foreground ring-1 ring-inset ring-accent",
@@ -156,27 +156,27 @@ export function AvailabilityCalendar({
 
       <div className="mt-5 space-y-2 border-t border-border pt-4">
         {hasFree ? (
-          <span className="flex items-center gap-2">
-            <span aria-hidden className="h-3 w-3 rounded bg-accent-soft" />
-            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+          <span className="flex items-start gap-2">
+            <span aria-hidden className="mt-0.5 h-3 w-3 shrink-0 rounded bg-accent-soft" />
+            <span className="font-mono text-label uppercase tracking-[0.18em] text-foreground">
               Week-ends · dispo pour se voir
             </span>
           </span>
         ) : null}
         {hasBusy ? (
-          <span className="flex items-center gap-2">
+          <span className="flex items-start gap-2">
             {/* Diagonale dessinée en dégradé : un `line-through` sur un carré
                 vide ne rendrait rien. */}
             <span
               aria-hidden
-              className="h-3 w-3 rounded border border-border bg-[linear-gradient(to_top_right,transparent_46%,currentColor_46%,currentColor_54%,transparent_54%)] text-muted/60"
+              className="mt-0.5 h-3 w-3 shrink-0 rounded border border-border bg-[linear-gradient(to_top_right,transparent_46%,currentColor_46%,currentColor_54%,transparent_54%)] text-faint"
             />
-            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+            <span className="font-mono text-label uppercase tracking-[0.18em] text-foreground">
               Jours déjà pris
             </span>
           </span>
         ) : null}
-        <p className="text-[13px] leading-relaxed text-muted">
+        <p className="text-label leading-relaxed text-foreground">
           {availability.message}
         </p>
       </div>

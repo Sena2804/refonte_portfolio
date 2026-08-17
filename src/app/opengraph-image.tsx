@@ -14,10 +14,10 @@ export const alt =
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const BACKGROUND = "#F7F7F4";
-const FOREGROUND = "#0C1222";
-const MUTED = "#5E6477";
-const BORDER = "#E4E2DB";
+const BACKGROUND = "#FFFFFF";
+const FOREGROUND = "#0A0A0C";
+const MUTED = "#1A3D7C"; // encre : seule couleur de la carte OG
+const BORDER = "#E2E4EA";
 
 export default function Image() {
   return new ImageResponse(
