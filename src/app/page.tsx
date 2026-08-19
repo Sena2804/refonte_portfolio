@@ -47,6 +47,8 @@ const featured = FEATURED_SLUGS.map((slug, i) => {
     type: project.type,
     description: project.summary,
     stack: project.stack.slice(0, 4),
+    // L'aperçu au survol affiche la vraie capture quand elle existe.
+    cover: project.cover,
   };
 });
 
@@ -64,7 +66,7 @@ function ContactRow({
 }) {
   return (
     <li className="group flex flex-wrap items-baseline justify-between gap-4 py-6">
-      <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+      <span className="font-mono text-xs uppercase tracking-[0.2em] text-foreground">
         {label}
       </span>
       {children}
@@ -98,7 +100,7 @@ export default async function HomePage() {
         <Section size="lg">
           <div className="grid items-center gap-12 lg:grid-cols-[1.6fr_0.9fr]">
             <div>
-              <SectionLabel number="001">Portfolio 2026</SectionLabel>
+              <SectionLabel number="001">Portfolio</SectionLabel>
 
               <h1 className="hero-title mt-10 max-w-[16ch] font-display font-normal text-[clamp(2rem,6vw,5rem)] leading-[0.95] tracking-[-0.02em]">
                 <span
@@ -114,7 +116,7 @@ export default async function HomePage() {
                   Développeuse
                 </span>
                 <span
-                  className="block text-muted [animation:hero-line-in_900ms_var(--ease-out-soft)_both]"
+                  className="block text-accent [animation:hero-line-in_900ms_var(--ease-out-soft)_both]"
                   style={{ animationDelay: "200ms" }}
                 >
                   full-stack
@@ -122,7 +124,7 @@ export default async function HomePage() {
               </h1>
 
               <Reveal delay={520}>
-                <p className="mt-10 max-w-xl text-lg leading-relaxed text-muted">
+                <p className="mt-10 max-w-xl text-lg leading-relaxed text-foreground">
                   De l’idée au déploiement, je conçois et développe des produits numériques fluides et prêts à la mise sur le marché.
                 </p>
               </Reveal>
@@ -152,7 +154,7 @@ export default async function HomePage() {
           {stack.map((item) => (
             <span
               key={item}
-              className="font-mono text-xs uppercase tracking-[0.22em] text-muted"
+              className="font-mono text-xs uppercase tracking-[0.22em] text-foreground"
             >
               {item}
             </span>
@@ -178,20 +180,20 @@ export default async function HomePage() {
 
         <ul className="mt-16 divide-y divide-border border-y border-border">
           {featured.map((p, i) => (
-            <Reveal key={p.number} delay={i * 80}>
-              <li>
+            <li key={p.number}>
+              <Reveal delay={i * 80}>
                 <Link
                   href={`/projets/${p.slug}`}
                   className="group grid grid-cols-1 gap-4 py-10 lg:grid-cols-[80px_1fr_auto] lg:items-baseline lg:gap-10"
                 >
-                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-foreground">
                     {p.number} / {p.year}
                   </span>
                   <div>
                     <h3 className="font-display text-[clamp(1.5rem,3.5vw,2.25rem)] leading-tight tracking-tight transition-colors duration-300 group-hover:text-accent">
                       {p.title}
                     </h3>
-                    <p className="mt-2 text-sm text-muted">{p.type}</p>
+                    <p className="mt-2 text-sm text-foreground">{p.type}</p>
                     <p className="mt-5 max-w-prose text-[15px] leading-relaxed">
                       {p.description}
                     </p>
@@ -201,7 +203,7 @@ export default async function HomePage() {
                       ))}
                     </div>
                   </div>
-                  <span className="inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.2em] text-muted transition-colors duration-200 group-hover:text-foreground">
+                  <span className="inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.2em] text-foreground transition-colors duration-200 group-hover:text-accent">
                     Voir les détails
                     <ArrowUpRight
                       className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
@@ -210,8 +212,8 @@ export default async function HomePage() {
                   </span>
                   <HoverPreview project={p} />
                 </Link>
-              </li>
-            </Reveal>
+              </Reveal>
+            </li>
           ))}
         </ul>
 
@@ -240,7 +242,7 @@ export default async function HomePage() {
                 <h3 className="font-display text-[clamp(1.5rem,2.5vw,2rem)] leading-tight tracking-tight">
                   {p.title}
                 </h3>
-                <p className="mt-5 text-[15px] leading-relaxed text-muted">
+                <p className="mt-5 text-[15px] leading-relaxed text-foreground">
                   {p.body}
                 </p>
               </div>
@@ -261,7 +263,7 @@ export default async function HomePage() {
         <Reveal delay={160}>
           {/* Même source que la pastille du hero : la page ne peut pas dire
               « je suis disponible » pendant que le statut annonce l'inverse. */}
-          <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted">
+          <p className="mt-8 max-w-xl text-lg leading-relaxed text-foreground">
             {availability.message}
           </p>
         </Reveal>

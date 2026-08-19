@@ -76,15 +76,15 @@ export default function Navbar() {
                 className={cn(
                   "relative px-4 py-2 text-sm transition-colors duration-200",
                   active
-                    ? "text-foreground"
-                    : "text-muted hover:text-foreground",
+                    ? "text-accent"
+                    : "text-foreground hover:text-accent",
                 )}
               >
                 {link.label}
                 {active ? (
                   <span
                     aria-hidden
-                    className="absolute inset-x-4 -bottom-px h-px bg-foreground"
+                    className="absolute inset-x-4 -bottom-px h-px bg-accent"
                   />
                 ) : null}
               </Link>
@@ -131,7 +131,7 @@ export default function Navbar() {
                   aria-current={active ? "page" : undefined}
                   className={cn(
                     "border-b border-border py-4 font-display text-2xl leading-tight last:border-b-0",
-                    active ? "text-foreground" : "text-muted",
+                    active ? "text-accent" : "text-foreground",
                   )}
                 >
                   {link.label}

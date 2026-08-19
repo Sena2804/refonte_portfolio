@@ -66,8 +66,7 @@ export const SKILLS: Skill[] = [
   // — Niveau apprentissage : sujets travaillés en ce moment, sans livrable.
   { name: "DevOps & CI/CD", domain: "Ingénierie", level: "learning" },
   { name: "Machine Learning", domain: "Ingénierie", level: "learning" },
-  { name: "Architecture logicielle", domain: "Ingénierie", level: "learning" },
-  { name: "Design produit", domain: "Produit", level: "learning" },
+  { name: "Automatisation de procédés", domain: "Ingénierie", level: "learning" },
 ];
 
 /** Outils du quotidien — pas de niveau, ce ne sont pas des compétences à graduer. */
@@ -75,9 +74,7 @@ export const TOOLS = [
   "Git / GitHub",
   "VS Code",
   "Postman",
-  "Figma",
   "Trello",
-  "Notion",
   "Linux",
 ];
 

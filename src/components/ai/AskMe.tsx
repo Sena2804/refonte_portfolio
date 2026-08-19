@@ -126,7 +126,7 @@ export function AskMe() {
               <p className="font-display text-lg leading-none tracking-tight">
                 Prémicia
               </p>
-              <p className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+              <p className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-foreground">
                 Version IA de mon profil
               </p>
             </div>
@@ -134,7 +134,7 @@ export function AskMe() {
               type="button"
               onClick={() => setOpen(false)}
               aria-label="Fermer le chat"
-              className="-mr-1.5 -mt-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-muted transition-colors duration-200 hover:bg-surface hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="-mr-1.5 -mt-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-foreground transition-colors duration-200 hover:bg-surface hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               <X className="h-4 w-4" strokeWidth={1.75} />
             </button>
@@ -146,7 +146,7 @@ export function AskMe() {
           >
             {messages.length === 0 ? (
               <>
-                <p className="text-[15px] leading-relaxed text-muted">
+                <p className="text-[15px] leading-relaxed text-foreground">
                   Bonjour 👋 Pose-moi ce que tu veux sur mon parcours, mes
                   projets ou mes disponibilités.
                 </p>
@@ -156,7 +156,7 @@ export function AskMe() {
                       key={s}
                       type="button"
                       onClick={() => send(s)}
-                      className="rounded-full border border-border px-3.5 py-2 text-left text-[13px] text-muted transition-colors duration-200 hover:border-foreground hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                      className="rounded-full border border-border px-3.5 py-2 text-left text-[13px] text-foreground transition-colors duration-200 hover:border-foreground hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                     >
                       {s}
                     </button>
@@ -181,7 +181,7 @@ export function AskMe() {
             )}
 
             {notice ? (
-              <p className="rounded-xl border border-border bg-surface px-3.5 py-2.5 text-sm text-muted">
+              <p className="rounded-xl border border-border bg-surface px-3.5 py-2.5 text-sm text-foreground">
                 {notice}
               </p>
             ) : null}
@@ -202,7 +202,7 @@ export function AskMe() {
                 maxLength={2000}
                 placeholder="Écris ton message…"
                 aria-label="Ton message"
-                className="min-w-0 flex-1 bg-transparent text-[15px] text-foreground outline-none placeholder:text-muted"
+                className="min-w-0 flex-1 bg-transparent text-[15px] text-foreground outline-none placeholder:text-faint"
               />
               <button
                 type="submit"
@@ -214,7 +214,7 @@ export function AskMe() {
               </button>
             </form>
             {/* Mention d'honnêteté déplacée hors de l'en-tête, qui était chargé. */}
-            <p className="mt-3 text-[11px] leading-relaxed text-muted">
+            <p className="mt-3 text-[11px] leading-relaxed text-foreground">
               Réponses générées : je peux me tromper. Écris-moi pour confirmer.
             </p>
           </div>

@@ -39,7 +39,8 @@ export const EXPERIENCES: Experience[] = [
     place: "Remote",
     // Ni date de fin ni mention « en cours » : l'affichage se limite au mois
     // de début, sans rien affirmer sur le statut actuel du stage.
-    start: "2026-01",
+    start: "Janvier 2026",
+    end: "Avril 2026",
     summary:
       "Stage en développement web full-stack, en remote. Les projets sont couverts par un accord de confidentialité : seules les technologies employées sont mentionnées.",
     stack: ["React.js", "Laravel", "MySQL", "PostgreSQL", "Flutter"],
@@ -49,8 +50,8 @@ export const EXPERIENCES: Experience[] = [
     org: "Direction des Bourses et Aides Universitaires (DBAU)",
     role: "Stagiaire développeuse full-stack",
     place: "Cotonou, Bénin",
-    start: "2026-02",
-    end: "2026-05",
+    start: "Février 2026",
+    end: "Mai 2026",
     summary:
       "Contribution à la refonte du système d'informations de la DBAU. La confidentialité de la mission m'oblige à ne pas en dire davantage.",
     stack: ["Django", "Streamlit", "React.js", "PostgreSQL"],
@@ -63,7 +64,7 @@ export const EDUCATION: Education[] = [
     school: "Coding Academy by Epitech",
     place: "Cotonou",
     title: "Développement web full-stack et mobile",
-    start: "2025-07",
+    start: "Juillet 2025",
     detail:
       "Formation en développement web full-stack, incluant le développement mobile.",
   },
@@ -71,7 +72,7 @@ export const EDUCATION: Education[] = [
     school: "École 229",
     place: "Cotonou",
     title: "Développement web",
-    start: "2024-10",
+    start: "Octobre 2024",
     detail: "Formation en développement web.",
   },
   {

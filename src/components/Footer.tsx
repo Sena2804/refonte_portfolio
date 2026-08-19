@@ -18,7 +18,7 @@ export default function Footer() {
             <p className="font-display text-[clamp(1.75rem,3vw,2.25rem)] leading-tight tracking-tight">
               Prémicia S. E. Mensah
             </p>
-            <p className="mt-3 font-mono text-xs uppercase tracking-[0.2em] text-muted">
+            <p className="mt-3 font-mono text-xs uppercase tracking-[0.2em] text-foreground">
               Développeuse full-stack / Cotonou
             </p>
           </div>
@@ -34,7 +34,7 @@ export default function Footer() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="inline-flex items-center py-1 text-muted transition-colors duration-200 hover:text-foreground"
+                className="inline-flex items-center py-1 text-foreground transition-colors duration-200 hover:text-accent"
               >
                 {link.label}
               </Link>
@@ -42,7 +42,7 @@ export default function Footer() {
           </nav>
         </div>
 
-        <div className="mt-12 flex flex-col-reverse gap-4 border-t border-border pt-6 font-mono text-[11px] uppercase tracking-[0.2em] text-muted md:flex-row md:items-center md:justify-between">
+        <div className="mt-12 flex flex-col-reverse gap-4 border-t border-border pt-6 font-mono text-[11px] uppercase tracking-[0.2em] text-foreground md:flex-row md:items-center md:justify-between">
           <p>© {year} — Tous droits réservés</p>
           <a
             href="#top"

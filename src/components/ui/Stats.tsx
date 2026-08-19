@@ -52,7 +52,7 @@ export function Stats({
               <span>{stat.text}</span>
             )}
           </dd>
-          <dt className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+          <dt className="font-mono text-[11px] uppercase tracking-[0.2em] text-foreground">
             {stat.label}
           </dt>
         </div>

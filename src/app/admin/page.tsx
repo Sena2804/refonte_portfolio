@@ -31,7 +31,7 @@ function Notice({ children }: { children: React.ReactNode }) {
   return (
     <Card
       padding="sm"
-      className="mt-8 max-w-xl bg-surface/50 text-sm leading-relaxed text-muted"
+      className="mt-8 max-w-xl bg-surface/50 text-sm leading-relaxed text-foreground"
     >
       {children}
     </Card>
@@ -60,7 +60,7 @@ export default async function AdminPage() {
           </Notice>
         ) : !authenticated ? (
           <>
-            <p className="mt-8 max-w-xl text-[15px] leading-relaxed text-muted">
+            <p className="mt-8 max-w-xl text-[15px] leading-relaxed text-foreground">
               Cette page pilote ce qui s&apos;affiche dans le hero et ce que
               répond le chat sur mes disponibilités.
             </p>
@@ -90,7 +90,7 @@ async function AuthenticatedPanel() {
 
   return (
     <>
-      <p className="mt-8 max-w-xl text-[15px] leading-relaxed text-muted">
+      <p className="mt-8 max-w-xl text-[15px] leading-relaxed text-foreground">
         En ligne actuellement :{" "}
         <span className="text-foreground">
           {STATUS_LABELS[availability.status]}
@@ -113,7 +113,7 @@ async function AuthenticatedPanel() {
         <Button
           type="submit"
           variant="link"
-          className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted hover:text-foreground"
+          className="font-mono text-[11px] uppercase tracking-[0.18em] text-foreground hover:text-accent"
         >
           Se déconnecter
         </Button>

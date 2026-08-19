@@ -2,37 +2,45 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Parti pris : noir et blanc francs, l'encre en touche.
+   Le texte n'est JAMAIS adouci par une opacité ou un gris — la hiérarchie passe
+   par la typo (taille, casse, mono, interlettrage). Le seul gris restant est
+   `--faint`, réservé aux éléments qui encodent un état inactif (jours pris du
+   calendrier, pastille « indisponible », placeholders de formulaire). */
 :root {
-  --background: #F7F7F4;
-  --surface: #EEECE5;
-  --foreground: #0C1222;
-  --muted: #5E6477;
-  --border: #E4E2DB;
-  --accent: #1E2A4A;
-  --accent-soft: #E8EAF1;
+  --background: #FFFFFF;
+  --surface: #F4F5F8;
+  --foreground: #0A0A0C;
+  --border: #E2E4EA;
+  --accent: #1A3D7C;
+  /* Nappe d'encre très diluée : sur fond blanc franc, il faut la remonter
+     sinon les surfaces teintées (week-ends du calendrier, survol des lignes)
+     deviennent indiscernables du fond. */
+  --accent-soft: #DCE5F5;
   /* Assombri depuis #1F9D63 : à 3,23:1 sur le fond et 2,93:1 sur les surfaces,
      l'ancien vert échouait au contraste AA dès qu'il servait de texte
      (message de succès de /admin). Même teinte, 5,05:1 / 4,58:1. */
   --ok: #18794C;
+  --faint: #6E7480;
 }
 
 .dark {
-  --background: #0B0F1F;
-  --surface: #13182B;
-  --foreground: #E8E9ED;
-  --muted: #8A90A3;
-  --border: #1F2436;
-  --accent: #A9B6D9;
-  --accent-soft: #1A2140;
+  --background: #08090B;
+  --surface: #101218;
+  --foreground: #FFFFFF;
+  --border: #23262E;
+  --accent: #A8C0F0;
+  --accent-soft: #16203A;
   --ok: #4ED99A;
+  --faint: #8A90A3;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-foreground: var(--foreground);
-  --color-muted: var(--muted);
   --color-border: var(--border);
+  --color-faint: var(--faint);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-ok: var(--ok);
@@ -55,6 +63,24 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-feature-settings: "ss01", "cv11";
+}
+
+/* Curseur des éléments cliquables.
+   Depuis Tailwind v4, le preflight ne force plus `cursor: pointer` sur les
+   boutons : ils héritent du curseur par défaut du navigateur, une flèche. On le
+   remet ici plutôt que classe par classe, sinon le prochain bouton ajouté
+   quelque part repartira sans. Les `a[href]` l'ont déjà nativement, on les
+   nomme quand même pour que la règle documente l'intention complète. */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+a[href],
+summary {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
 }
 
 ::selection {
@@ -142,7 +168,9 @@ body {
   height: 48vw;
   left: -8%;
   top: -22%;
-  opacity: 0.35;
+  /* Sur fond blanc franc, une nappe d'encre trop dense vire au gris sale :
+     on reste sur une teinte perceptible mais discrète. */
+  opacity: 0.18;
   background: radial-gradient(
     circle,
     color-mix(in oklab, var(--accent) 45%, transparent),
@@ -156,7 +184,7 @@ body {
   height: 42vw;
   right: -6%;
   top: -12%;
-  opacity: 0.4;
+  opacity: 0.3;
   background: radial-gradient(
     circle,
     color-mix(in oklab, var(--accent-soft) 85%, transparent),
@@ -228,6 +256,36 @@ body {
       animation: parallax-slow linear both;
       animation-timeline: view();
     }
+  }
+}
+
+/* ---- Chronologie : le rail se remplit à l'encre au fil du scroll ----
+   Piloté par le scroll natif (`animation-timeline: view()`), donc zéro JS.
+   Masqué par défaut : sans support, on garde le simple filet gris du `ol`
+   plutôt qu'un rail entièrement encré qui n'aurait aucun sens. */
+
+.rail-fill {
+  display: none;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .rail-fill {
+      display: block;
+      transform-origin: top;
+      animation: rail-fill linear both;
+      animation-timeline: view();
+      animation-range: entry 25% cover 60%;
+    }
+  }
+}
+
+@keyframes rail-fill {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
   }
 }
 

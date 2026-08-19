@@ -1,6 +1,8 @@
 export { Page } from "./Page";
 export { Section } from "./Section";
 export { SectionLabel } from "./SectionLabel";
+export { Tabs } from "./Tabs";
+export type { TabItem } from "./Tabs";
 export { Heading } from "./Heading";
 export { Button, ButtonLink } from "./Button";
 export { Card } from "./Card";

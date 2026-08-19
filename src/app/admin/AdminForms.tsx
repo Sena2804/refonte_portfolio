@@ -14,10 +14,10 @@ import { login, saveAvailability, type ActionState } from "./actions";
 const EMPTY: ActionState = {};
 
 const fieldClasses =
-  "w-full rounded-xl border border-border bg-background px-4 py-3 text-[15px] text-foreground transition-colors duration-200 placeholder:text-muted/60 focus:border-accent focus:outline-none";
+  "w-full rounded-xl border border-border bg-background px-4 py-3 text-[15px] text-foreground transition-colors duration-200 placeholder:text-faint focus:border-accent focus:outline-none";
 
 const labelClasses =
-  "block font-mono text-[11px] uppercase tracking-[0.18em] text-muted";
+  "block font-mono text-[11px] uppercase tracking-[0.18em] text-foreground";
 
 function Feedback({ state }: { state: ActionState }) {
   if (!state.error && !state.success) return null;
@@ -106,7 +106,7 @@ export function AvailabilityForm({ initial }: { initial: Availability }) {
           defaultValue={initial.message}
           className={cn(fieldClasses, "resize-y leading-relaxed")}
         />
-        <p className="text-xs text-muted">
+        <p className="text-xs text-foreground">
           Visible dans le hero, et reprise telle quelle par le chat.{" "}
           {MESSAGE_MAX} caractères max.
         </p>
@@ -124,7 +124,7 @@ export function AvailabilityForm({ initial }: { initial: Availability }) {
           placeholder={"2026-08-15\n2026-08-16"}
           className={cn(fieldClasses, "resize-y font-mono text-sm leading-relaxed")}
         />
-        <p className="text-xs text-muted">
+        <p className="text-xs text-foreground">
           Une date par ligne, au format AAAA-MM-JJ. Ces jours apparaissent
           barrés dans le calendrier du hero.
         </p>
